@@ -1,0 +1,84 @@
+#!/bin/bash
+
+source .env
+
+if [[ -z $(which haproxy) ]]; then
+    echo "Installing HAProxy"
+    if [[ -n $(which apt-get) ]]; then
+        sudo apt-get update && apt-get install haproxy --yes
+    elif [[ -n $(which brew) ]]; then
+        brew install haproxy
+    fi
+fi
+
+if [[ -z "$HOST" ]]; then
+    HOST=localhost
+fi
+
+if [[ -z "$PORT" ]]; then
+    PORT=3000
+fi
+
+function clean {
+  rm crt-domain.pem haproxy.cfg
+}
+trap clean EXIT
+
+# See https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
+if [[ ! -f "./crt-root.pem" ]]; then
+    openssl genrsa -out crt-root.key 2048
+    openssl req -x509 -new -nodes -key crt-root.key -sha256 -days 1825 -out crt-root.pem \
+        -subj "/C=RU/ST=Moscow/L=Moscow/O=DOCTOOLS/OU=DT/CN=Localhost Authority"
+
+    sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" crt-root.pem
+
+    rm  crt-root.srl
+fi
+
+if [[ ! -f "./crt-domain.pem" ]]; then
+    openssl genrsa -out crt-domain.key 2048
+    openssl req -new -key crt-domain.key -out crt-domain.csr -nodes \
+        -subj "/C=RU/ST=Moscow/L=Moscow/O=DOCTOOLS/OU=DT/CN=Localhost Authority"
+
+    cat > "crt-domain.ext" <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = $HOST
+DNS.2 = *.$HOST
+EOF
+
+    openssl x509 -req -in crt-domain.csr -CA crt-root.pem -CAkey crt-root.key \
+        -CAcreateserial -out crt-domain.crt -days 825 -sha256 -extfile crt-domain.ext
+
+    cat crt-domain.crt crt-domain.key > crt-domain.pem
+    rm  crt-domain.csr crt-domain.crt crt-domain.key crt-domain.ext
+fi
+
+cat > "haproxy.cfg" <<EOF
+defaults
+	mode    http
+    retries 3
+    timeout connect  5s
+	timeout client  30s
+    timeout server  30s
+    timeout client-fin 30s
+    maxconn 200000
+
+frontend localhost
+    bind [::]:443 ssl crt crt-domain.pem
+    mode http
+    option forwardfor
+    default_backend nodejs
+
+backend nodejs
+    mode http
+    balance roundrobin
+    server nodejs 127.0.0.1:$PORT
+    timeout tunnel 10h
+EOF
+
+# sudo setcap 'cap_net_bind_service=+ep' /usr/sbin/haproxy
+haproxy -f haproxy.cfg
