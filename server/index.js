@@ -22,13 +22,21 @@ app.use(session({
 }));
 
 app.get('/', async (req, res) => {
-    if (req.session && req.session.access_token) {
-        const user = await fetchGitHubUser(req.session.access_token);
+    res.send(`
+<html>
+<head>
 
-        res.send(`Hello ${user.name} <pre> ${JSON.stringify(user, null, 2)}`);
-    } else {
-        res.redirect('/login/github');
-    }
+</head>
+<body>
+    <button>
+        <a href="/login/github">Authorize</a>
+    </button>
+    <button>
+        <a href="https://github.com/apps/modelsjs/installations/new">Install</a>
+    </button>
+</body>
+</html>    
+`)
 });
 
 app.get('/logout', (req, res) => {
