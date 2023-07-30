@@ -19,6 +19,10 @@ if [[ -z "$PORT" ]]; then
     PORT=3000
 fi
 
+if [[ -z "$BUILD_PORT" ]]; then
+    BUILD_PORT=3001
+fi
+
 function clean {
   rm crt-domain.pem haproxy.cfg
 }
@@ -71,9 +75,20 @@ frontend localhost
     bind [::]:443 ssl crt crt-domain.pem
     mode http
     option forwardfor
-    default_backend nodejs
+    default_backend server
 
-backend nodejs
+    acl is-build-path path_dir /static
+
+    use_backend build if is-build-path
+
+backend build
+    mode http
+    balance roundrobin
+    server nodejs 127.0.0.1:$BUILD_PORT
+    http-request replace-path ^/static/(.*) /\1
+    timeout tunnel 10h
+
+backend server
     mode http
     balance roundrobin
     server nodejs 127.0.0.1:$PORT

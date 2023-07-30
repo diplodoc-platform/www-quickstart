@@ -1,19 +1,42 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import session from 'cookie-session';
+import {resolve, dirname} from 'node:path';
+import {fileURLToPath} from 'url';
+import {NodeKit} from '@gravity-ui/nodekit';
 import {$} from 'zx';
+import gh from './gh.js'
+import {withModels} from './models-runtime/index.js';
+
+dotenv.config({path: '../.env'});
+
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const {
     PORT = 3000,
-    HAPROXY_DOMAIN = 'localhost',
+    HOST = 'localhost',
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
+    GITHUB_APP_ID,
+    GITHUB_APP_PRIVATE_KEY_PATH,
     COOKIE_SECRET,
 } = process.env;
 
 const app = express();
+const nodekit = new NodeKit({
+    disableDotEnv: true,
+    config: {
+        appTracingEnabled: false,
+    }
+});
+const ghapp = gh(GITHUB_APP_ID, resolve(__dirname, '../', GITHUB_APP_PRIVATE_KEY_PATH));
+
+app.use((req, res, next) => {
+    req.ctx = res.ctx = nodekit.ctx.create(req.url);
+    withModels(req, res);
+    next();
+});
 
 app.use(session({
     name: 'session',
@@ -22,21 +45,35 @@ app.use(session({
 }));
 
 app.get('/', async (req, res) => {
-    res.send(`
-<html>
-<head>
+    const state = {
+        api: {
+            request: req.ctx.request.bind(req.ctx)
+        },
+        session: req.session
+    };
+    const [
+        app
+    ] = await Promise.all([
+        import('../client/build/server/app.cjs')
+    ]);
 
-</head>
-<body>
-    <button>
-        <a href="/login/github">Authorize</a>
-    </button>
-    <button>
-        <a href="https://github.com/apps/modelsjs/installations/new">Install</a>
-    </button>
-</body>
-</html>    
-`)
+    // if (req.session.access_token) {
+    //     const user = await fetchGitHubUser(req.session.access_token);
+    // }
+
+    const {pipe} = app.default(state).render({
+        url: req.url
+    }, {
+        bootstrapScripts: [
+            '/static/client/runtime.cjs',
+            '/static/client/app.cjs',
+            '/static/client/vendors-node_modules_react-dom_client_js-node_modules_react-router-dom_dist_index_js-node_mod-36f44b.cjs',
+        ],
+        onShellReady() {
+            res.setHeader('content-type', 'text/html');
+            pipe(res);
+        }
+    });
 });
 
 app.get('/logout', (req, res) => {
@@ -64,7 +101,9 @@ app.get('/login/github/callback', async (req, res) => {
     }
 })
 
-app.listen(PORT, () => $`open https://${HAPROXY_DOMAIN}`);
+app.listen(PORT, () => {
+    // $`open https://${HOST}`
+});
 
 async function getAccessToken({code}) {
     const request = await fetch('https://github.com/login/oauth/access_token', {

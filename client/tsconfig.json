@@ -16,10 +16,11 @@
     "noEmitOnError": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "jsx": "react"
-  },
-  "ts-node": {
-    "esm": true,
-    "transpileOnly": true
+    "jsx": "react",
+    "paths": {
+      "~/models/*": ["client/src/models/client/*"],
+      "~/resolvers/*": ["client/src/resolvers/*"],
+      "~/configs/*": ["client/src/configs/*"],
+    }
   }
 }

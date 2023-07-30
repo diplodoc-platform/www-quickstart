@@ -5,7 +5,10 @@
   "type": "module",
   "main": "server/index.js",
   "scripts": {
-    "start": "npm run start --workspaces"
+    "start": "run-p start:* -l ",
+    "start:proxy": "npm start -w proxy",
+    "start:client": "npm start -w client",
+    "start:server": "npm start -w server"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +16,8 @@
     "server",
     "client",
     "proxy"
-  ]
+  ],
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }
