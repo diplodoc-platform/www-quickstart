@@ -6,7 +6,13 @@ import {Prefetch} from '~/resolvers/strategy';
 export class User extends Model {
     static displayName = 'user';
 
-    id?: string;
+    id!: string;
 
-    name?: string;
+    name!: string;
+
+    login!: string;
+
+    link!: string;
+
+    avatar!: string;
 }

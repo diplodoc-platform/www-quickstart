@@ -18,9 +18,14 @@
     "allowJs": true,
     "jsx": "react",
     "paths": {
-      "~/models/*": ["client/src/models/client/*"],
-      "~/resolvers/*": ["client/src/resolvers/*"],
-      "~/configs/*": ["client/src/configs/*"],
+      "~/utils": ["src/utils"],
+      "~/models/*": ["src/models/*"],
+      "~/resolvers": ["src/resolvers/"],
+      "~/resolvers/*": ["src/resolvers/*"],
+      "~/configs/*": ["src/configs/*"]
     }
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

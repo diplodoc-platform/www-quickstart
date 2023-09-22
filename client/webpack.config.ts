@@ -1,5 +1,7 @@
 import { resolve } from 'node:path';
 import { DefinePlugin } from 'webpack';
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
+import MiniCSSExtractPlugin from 'mini-css-extract-plugin';
 import { CustomRuntime } from './webpack/plugins/CustomRuntime';
 
 type Env = {
@@ -22,7 +24,7 @@ const config = ({ isServer, isDev = false }: Env) => {
             path: resolve(__dirname, 'build'),
             publicPath: isServer ? '' : 'auto',
             filename: isServer ? 'server/[name].cjs' : 'client/[name].cjs',
-            chunkFilename: isServer ? 'server/[name].cjs' : 'client/[name].cjs',
+            chunkFilename: '[name].cjs',
             ...(isServer ? {
                 iife: false,
                 libraryTarget: 'commonjs2',
@@ -34,22 +36,27 @@ const config = ({ isServer, isDev = false }: Env) => {
         } : {},
         resolve: {
             extensions: [
-                isServer ? '.server.tsx' : '.client.tsx',
-                isServer ? '.server.ts' : '.client.ts',
+                isServer && '.server.tsx',
+                isServer && '.server.ts',
                 '.tsx',
                 '.ts',
                 '...'
             ].filter(Boolean),
             enforceExtension: false,
+            // fallback: {
+            //     '@doc-tools/transform/*': false
+            // },
+            mainFields: ["main", "module"],
             alias: {
                 'react': require.resolve('react'),
                 'react-dom/client': require.resolve('react-dom/client'),
                 'react-dom/server': isServer
                     ? require.resolve('react-dom/server.node')
                     : require.resolve('react-dom/server.browser'),
+                '~/utils':  resolve(__dirname, './src/utils'),
                 '~/models':  resolve(__dirname, './src/models'),
                 '~/resolvers': resolve(__dirname, './src/resolvers'),
-                '~/configs': resolve(__dirname, './src/configs'),
+                '~/configs': resolve(__dirname, './src/configs')
             },
             fallback: isServer ? {} : {
                 'stream': false,
@@ -80,12 +87,27 @@ const config = ({ isServer, isDev = false }: Env) => {
                 exclude: /node_modules/,
             } ],
         },
+        experiments: {
+            css: {
+                exportsOnly: isServer,
+
+            }
+        },
         plugins: [
             new DefinePlugin({
                 'process.env': {
                     SERVER: isServer
                 }
             }),
+            new WebpackManifestPlugin({
+                fileName: isServer ? 'server/manifest.json' : 'client/manifest.json',
+                writeToFileEmit: true
+            }),
+            // new MiniCSSExtractPlugin({
+            //     filename: isDev ? '[name].css' : '[name].[contenthash:8].css',
+            //     chunkFilename: isDev ? '[name].css' : '[name].[contenthash:8].css',
+            //     ignoreOrder: true,
+            // }),
             isServer && new CustomRuntime()
         ].filter(Boolean),
         optimization: {

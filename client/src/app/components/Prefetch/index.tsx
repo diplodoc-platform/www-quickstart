@@ -1,6 +1,7 @@
 import React from 'react';
-import {useModel} from '@modelsjs/react';
-import {Prefetch as PrefetchModel} from '~/models/prefetch';
+import { useModel } from '@modelsjs/react';
+import { Prefetch as PrefetchModel } from '~/models/prefetch';
+import { Transferable } from '../Transferable';
 
 export const Prefetch = () => {
     const prefetch = useModel(PrefetchModel);
@@ -9,13 +10,7 @@ export const Prefetch = () => {
         <div id="prefetch">
             {
                 Object.keys(prefetch.items).map((key) => {
-                    const model = prefetch.items[key];
-
-                    return (
-                        <script key={key} data-id={key} type="application/json">
-                            {model}
-                        </script>
-                    );
+                    return (<Transferable key={ key } id={ key } data={ prefetch.items[key] }/>);
                 })
             }
         </div>

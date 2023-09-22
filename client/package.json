@@ -17,19 +17,33 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@babel/register": "^7.22.5",
+    "@modelsjs/model": "^0.0.1",
+    "@modelsjs/react": "^0.0.1",
+    "@modelsjs/resolver": "^0.0.1",
+    "@modelsjs/tsconfig": "^0.0.1",
     "@types/react": "^18.2.17",
     "@types/react-dom": "^18.2.7",
     "@types/webpack": "^5.28.1",
     "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "postcss-loader": "^7.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
+    "webpack-manifest-plugin": "^5.0.0",
     "webpack-sources": "^3.2.3"
   },
   "dependencies": {
+    "@gravity-ui/page-constructor": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.11",
     "react-router-dom": "^6.14.2",
     "typescript": "^5.1.6"
+  },
+  "overriges": {
+    "react": "*",
+    "react-dom": "*"
   }
 }

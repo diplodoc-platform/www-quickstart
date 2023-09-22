@@ -1,0 +1,15 @@
+@import '@gravity-ui/uikit/styles/styles.css';
+/*@import '@gravity-ui/page-constructor/styles/styles.css';*/
+
+html, body {
+    min-height: 100vh;
+    paddin: 0;
+    margin: 0;
+    background: var(--g-color-base-background);
+}
+
+.pc-content-wrapper__icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50%;
+}

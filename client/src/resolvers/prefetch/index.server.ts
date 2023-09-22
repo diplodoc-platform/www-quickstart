@@ -3,11 +3,7 @@ import type { TResolver } from '@modelsjs/resolver';
 import { construct, once, ModelState } from '@modelsjs/model';
 import { Prefetch as PrefetchModel } from '~/models/prefetch';
 import { PrefetchStrategy } from '../strategy';
-import { sign } from './utils';
-
-const stringify = (object) => Buffer
-    .from(JSON.stringify(object), 'utf8')
-    .toString('base64');
+import { sign, stringify } from '~/utils';
 
 export const Prefetch: TResolver = {
     get strategy() {
