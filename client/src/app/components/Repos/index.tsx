@@ -1,17 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
-import {construct} from '@modelsjs/model';
+import React, { useCallback } from 'react';
 import {useModel} from '@modelsjs/react';
 
-import {Repos, Repo, Owner} from '~/models/repos';
+import {Repos, Repo} from '~/models/repos';
 
 import * as cs from './index.module.css';
 
-console.log(cs);
-
 export const ReposPage = () => {
     const repos = useModel(Repos);
-
-    console.log(repos);
 
     return <div>
         {repos.repos.map((repo) => {
