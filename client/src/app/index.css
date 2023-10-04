@@ -1,4 +1,5 @@
 @import '@gravity-ui/uikit/styles/styles.css';
+@import './theme.css';
 /*@import '@gravity-ui/page-constructor/styles/styles.css';*/
 
 html, body {
@@ -6,6 +7,10 @@ html, body {
     paddin: 0;
     margin: 0;
     background: var(--g-color-base-background);
+}
+
+.g-root {
+    --pc-first-block-indent: 0px;
 }
 
 .pc-content-wrapper__icon {

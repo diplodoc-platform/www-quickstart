@@ -5,20 +5,20 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ."
+    "start": "NODE_OPTIONS='--conditions=server' nodemon -e js,cjs,json --watch . --watch ../client/build/server ./dev",
+    "secrets": "../scripts/secrets"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@diplodoc/cabinet": "^1.0.0",
     "@gravity-ui/expresskit": "^0.4.0",
     "@gravity-ui/nodekit": "^0.3.0",
     "cookie-session": "^2.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "octokit": "^3.1.0",
-    "zx": "^7.2.3"
+    "octokit": "^3.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

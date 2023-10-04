@@ -1,1 +1,0 @@
-export { Repos, Repo, Owner, Installation } from './repos';

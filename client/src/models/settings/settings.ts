@@ -8,9 +8,7 @@ export enum Theme {
     Dark = 'dark',
 }
 
-@resolvable(Prefetch)
+@resolvable(Prefetch('settings'))
 export class Settings extends Model {
-    static displayName = 'settings';
-
     theme!: Theme;
 }

@@ -1,24 +1,18 @@
+import type { RenderToPipeableStreamOptions } from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom/server';
 import { renderToPipeableStream } from 'react-dom/server';
 
 import { App } from './app';
-import { Server, Static, Prefetch } from '~/resolvers';
 
 type Props = {
-    url?: string;
+    url: string;
 };
 
-export function render(props: Props, stream) {
-    const resolvers = [
-        Prefetch,
-        Static,
-        Server,
-    ];
-
+export function render(props: Props, options?: RenderToPipeableStreamOptions) {
     return renderToPipeableStream((
         <StaticRouter location={ props.url }>
-            <App { ...{ resolvers } } />
+            <App/>
         </StaticRouter>
-    ), stream);
+    ), options);
 }

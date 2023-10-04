@@ -2,10 +2,8 @@ import {Model} from '@modelsjs/model';
 import {resolvable} from '@modelsjs/resolver';
 import {Prefetch} from '~/resolvers/strategy';
 
-@resolvable(Prefetch)
+@resolvable(Prefetch('user'))
 export class User extends Model {
-    static displayName = 'user';
-
     id!: string;
 
     name!: string;

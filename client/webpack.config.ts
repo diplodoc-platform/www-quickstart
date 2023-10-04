@@ -1,8 +1,14 @@
+import 'dotenv/config';
+
 import { resolve } from 'node:path';
 import { DefinePlugin } from 'webpack';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
-import MiniCSSExtractPlugin from 'mini-css-extract-plugin';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import StatoscopeWebpackPlugin from '@statoscope/webpack-plugin'
+// import MiniCSSExtractPlugin from 'mini-css-extract-plugin';
 import { CustomRuntime } from './webpack/plugins/CustomRuntime';
+
+import {dependencies} from './package.json';
 
 type Env = {
     isDev: boolean;
@@ -11,6 +17,10 @@ type Env = {
 
 const server = resolve(__dirname, 'build', 'server');
 const client = resolve(__dirname, 'build', 'client');
+const externals = (object) => Object.keys(object).reduce((acc, key) => {
+    acc[key] = 'commonjs ' + key;
+    return acc;
+}, {})
 
 const config = ({ isServer, isDev = false }: Env) => {
     return {
@@ -19,6 +29,10 @@ const config = ({ isServer, isDev = false }: Env) => {
         devtool: 'source-map',
         entry: {
             'app': './src/app',
+            ...(isServer ? {
+                'models': './src/api/models',
+                'actions': './src/api/actions',
+            } : {})
         },
         output: {
             path: resolve(__dirname, 'build'),
@@ -30,10 +44,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                 libraryTarget: 'commonjs2',
             } : {})
         },
-        externals: isServer ? {
-            'stream': 'commonjs stream',
-            'util': 'commonjs util',
-        } : {},
+        externals: isServer ? externals(dependencies) : {},
         resolve: {
             extensions: [
                 isServer && '.server.tsx',
@@ -46,17 +57,19 @@ const config = ({ isServer, isDev = false }: Env) => {
             // fallback: {
             //     '@doc-tools/transform/*': false
             // },
-            mainFields: ["main", "module"],
+            mainFields: [ 'main', 'module' ],
             alias: {
                 'react': require.resolve('react'),
                 'react-dom/client': require.resolve('react-dom/client'),
                 'react-dom/server': isServer
                     ? require.resolve('react-dom/server.node')
                     : require.resolve('react-dom/server.browser'),
-                '~/utils':  resolve(__dirname, './src/utils'),
-                '~/models':  resolve(__dirname, './src/models'),
+                '~/assets': resolve(__dirname, './src/assets'),
+                '~/utils': resolve(__dirname, './src/utils'),
+                '~/models': resolve(__dirname, './src/models'),
                 '~/resolvers': resolve(__dirname, './src/resolvers'),
-                '~/configs': resolve(__dirname, './src/configs')
+                '~/configs': resolve(__dirname, './src/configs'),
+                '~@doc-tools/transform/dist/css/yfm.css': require.resolve('@doc-tools/transform/dist/css/yfm.css'),
             },
             fallback: isServer ? {} : {
                 'stream': false,
@@ -65,6 +78,9 @@ const config = ({ isServer, isDev = false }: Env) => {
         },
         module: {
             rules: [ {
+                test: /\.svg$/,
+                type: 'asset/source',
+            }, {
                 test: /\.[tj]sx?$/,
                 resolve: {
                     fullySpecified: false,
@@ -84,25 +100,47 @@ const config = ({ isServer, isDev = false }: Env) => {
                         ]
                     }
                 } ],
-                exclude: /node_modules/,
+                exclude: /node_modules\/(?!@modelsjs)/
             } ],
         },
         experiments: {
             css: {
                 exportsOnly: isServer,
-
             }
         },
         plugins: [
             new DefinePlugin({
                 'process.env': {
-                    SERVER: isServer
+                    SERVER: isServer,
                 }
             }),
-            new WebpackManifestPlugin({
-                fileName: isServer ? 'server/manifest.json' : 'client/manifest.json',
-                writeToFileEmit: true
+            !isServer && new WebpackManifestPlugin({
+                fileName: 'client/manifest.cjs',
+                writeToFileEmit: true,
+                serialize: (manifest) => {
+                    const data = Object.keys(manifest)
+                        .filter((key) => !key.endsWith('.map'))
+                        .reduce((acc, key) => {
+                            if (key.endsWith('.css')) {
+                                acc.styles.push(manifest[key]);
+                            }
+
+                            if (key.endsWith('.cjs')) {
+                                acc.scripts.push(manifest[key]);
+                            }
+
+                            return acc;
+                        }, {
+                            styles: [],
+                            scripts: []
+                        });
+                    return `module.exports = (${ Manifest.toString() })(${ JSON.stringify(data, null, 2) })`;
+                }
             }),
+            // new BundleAnalyzerPlugin({
+            //     analyzerMode: 'static'
+            // }),
+            // new StatoscopeWebpackPlugin(),
             // new MiniCSSExtractPlugin({
             //     filename: isDev ? '[name].css' : '[name].[contenthash:8].css',
             //     chunkFilename: isDev ? '[name].css' : '[name].[contenthash:8].css',
@@ -131,6 +169,18 @@ const config = ({ isServer, isDev = false }: Env) => {
 
     };
 };
+
+function Manifest(manifest) {
+    return function(root) {
+        if (root) {
+            root = root.replace(/\/$/, '');
+            manifest.scripts = manifest.scripts.map((key) => key.replace(/^auto/, root));
+            manifest.styles = manifest.styles.map((key) => key.replace(/^auto/, root));
+        }
+
+        return manifest;
+    }
+}
 
 export default [
     config({ isDev: true, isServer: true }),

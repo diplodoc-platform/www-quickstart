@@ -1,21 +1,17 @@
-import type { FC } from 'react';
-import React from 'react';
+import React, { memo } from 'react';
 
 import { ErrorBoundary } from 'react-error-boundary';
 import { Resolver, Wait } from '@modelsjs/react';
-import { Content } from './components/Content';
+import { Setup } from './components/Setup';
 import { Prefetch } from './components/Prefetch';
 import { stringify } from '~/utils';
 
 import * as env from '~/configs/env';
 import * as manifest from '~/configs/manifest';
+import { resolvers } from './resolvers';
 import { Transferable } from './components/Transferable';
 
-type AppProps = {
-    resolvers: Resolver[]
-};
-
-export const App: FC<AppProps> = ({ resolvers }) => {
+export const App = memo(() => {
     return (
         <html>
         <head>
@@ -31,9 +27,9 @@ export const App: FC<AppProps> = ({ resolvers }) => {
             }
         </head>
         <body className="g-root g-root_theme_dark">
-        <ErrorBoundary fallback={<div>'Error...'</div>}>
+        <ErrorBoundary fallback={ <div>'Error...'</div> }>
             <Resolver fallback={ <div></div> } resolvers={ resolvers }>
-                <Content/>
+                <Setup/>
                 <Wait>
                     <Prefetch/>
                 </Wait>
@@ -42,4 +38,4 @@ export const App: FC<AppProps> = ({ resolvers }) => {
         </body>
         </html>
     );
-};
+});

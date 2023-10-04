@@ -4,13 +4,28 @@ if (!process.env.SERVER) {
     throw new Error('Session config is not accessible on client');
 }
 
-type Server = {
+export type Server = {
     accessToken: string;
     appPem: string;
+    saId: string;
+    saSupervisorId: string;
+    saAccessKey: string;
+    saPrivateKey: string;
+    saResourceId: string;
 };
 
 const state = config<Server>('server');
 
-export const accessToken: string = state.accessToken;
+export const accessToken = state.accessToken;
 
-export const appPem: string = state.appPem;
+export const appPem = state.appPem;
+
+export const saId = state.saId;
+
+export const saSupervisorId = state.saSupervisorId;
+
+export const saAccessKey = state.saAccessKey;
+
+export const saPrivateKey = state.saPrivateKey;
+
+export const saResourceId = state.saResourceId;

@@ -7,7 +7,7 @@ import {Static} from '~/resolvers/strategy';
 }))
 export class Prefetch extends Model {
 
-    items: Record<string, string>;
+    items!: Record<string, string>;
 
     add(key: string, model: string) {
         if (this.items?.[key]) {
