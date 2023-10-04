@@ -1,5 +1,5 @@
 {
-  "name": "github-app",
+  "name": "@diplodoc/www-quickstart",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -12,7 +12,8 @@
     "start:proxy": "npm start -w proxy",
     "start:client": "npm start -w client",
     "start:server": "npm start -w server",
-    "secrets": "npm run secrets --workspaces --if-present"
+    "secrets": "npm run secrets --workspaces --if-present",
+    "prepublishOnly": "npm run clean --workspaces --if-present && npm run build --workspaces --if-present"
   },
   "author": "",
   "license": "ISC",

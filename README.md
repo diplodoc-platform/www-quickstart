@@ -6,18 +6,16 @@ Implements simple GitHub auth based app.
 
 ## Installation
 ```bash
-npm i @diplodoc/quickstart
+npm i @diplodoc/www-quickstart
 ```
 
 ## Usage
 
 Attach routing to server
 ```js
-import {route as quickstart} from '@diplodoc/quickstart'
+import {router as quickstart} from '@diplodoc/www-quickstart'
 
-express.use(quickstart(
-    staticRoot: 'some/static/root'
-));
+express.use(quickstart);
 ```
 
 Publish static to CDN
