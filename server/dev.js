@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import express from 'express';
 import {router as quickstart} from './index.js';
+import navigation from "./navigation.js";
 
 const {
     PORT = 3000,
@@ -9,7 +10,7 @@ const {
 
 const app = express();
 
-app.use(quickstart);
+app.use(quickstart({navigation}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);

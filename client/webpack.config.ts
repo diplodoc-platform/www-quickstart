@@ -24,7 +24,6 @@ const externals = (object) => Object.keys(object).reduce((acc, key) => {
 
 const config = ({ isServer, isDev = false }: Env) => {
     return {
-        mode: 'development',
         target: isServer ? 'node' : 'web',
         devtool: 'source-map',
         entry: {

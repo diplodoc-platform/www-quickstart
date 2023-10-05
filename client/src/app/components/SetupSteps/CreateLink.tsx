@@ -5,6 +5,8 @@ import { Project } from '~/models/project';
 import { ModelError, set } from '@modelsjs/model';
 import { Button, Link } from '@gravity-ui/uikit';
 
+import { api } from '~/configs/urls';
+
 import * as cs from './index.module.css';
 
 export const CreateLink = memo(() => {
@@ -19,7 +21,7 @@ export const CreateLink = memo(() => {
     const onClick = useCallback(async () => {
         setLoading(true);
 
-        const request = await fetch('/api/actions/create-link', {
+        const request = await fetch(api + '/actions/create-link', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'

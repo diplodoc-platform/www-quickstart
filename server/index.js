@@ -2,14 +2,13 @@ import express, {Router} from 'express';
 import session from 'cookie-session';
 import {NodeKit} from '@gravity-ui/nodekit';
 import {withModels} from './models-runtime/index.js';
+import {expectEnv} from "./utils/envconfig.js";
 
 import {router as root} from "./routes/root/index.js";
 import {router as api} from "./routes/api/index.js";
-import {router as login} from "./routes/login/index.js";
+import {router as auth} from "./routes/auth/index.js";
 
-export const router = new Router();
-
-const {COOKIE_SECRET} = process.env;
+const COOKIE_SECRET = expectEnv('COOKIE_SECRET')();
 
 const nodekit = new NodeKit({
     disableDotEnv: true,
@@ -18,28 +17,30 @@ const nodekit = new NodeKit({
     }
 });
 
-router.use(express.json());
+const DEFAULT_URLS = { api: '/api', auth: '/auth' };
 
-router.use(session({
-    name: 'session',
-    keys: [COOKIE_SECRET],
-    maxAge: 24 * 60 * 60 * 1000
-}));
+export const router = ({navigation, urls = {}, base = '/static'} = {}) => {
+    urls = {...DEFAULT_URLS, urls};
 
-router.use((req, res, next) => {
-    req.ctx = res.ctx = nodekit.ctx.create(req.url);
-    withModels(req, res);
-    next();
-});
+    const router = new Router();
 
-router.get('/', root);
-router.use('/api', api);
-router.use('/login', login);
-router.get('/logout', (req, res) => {
-    if (req.session) {
-        req.session = null;
-    }
+    router.use(express.json());
 
-    res.redirect('/');
-});
+    router.use(session({
+        name: 'session',
+        keys: [COOKIE_SECRET],
+        maxAge: 24 * 60 * 60 * 1000
+    }));
 
+    router.use((req, res, next) => {
+        req.ctx = res.ctx = nodekit.ctx.create(req.url);
+        withModels(req, res);
+        next();
+    });
+
+    router.get('/', root({urls, navigation, base}));
+    router.use(urls.api || '/api', api());
+    router.use(urls.auth || '/auth', auth());
+
+    return router;
+};
