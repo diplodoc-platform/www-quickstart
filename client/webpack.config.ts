@@ -73,6 +73,7 @@ const config = ({ isServer, isDev = false }: Env) => {
             fallback: isServer ? {} : {
                 'stream': false,
                 'util': false,
+                'url': false,
             }
         },
         module: {
