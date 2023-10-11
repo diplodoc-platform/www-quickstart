@@ -10,7 +10,7 @@ const {
 
 const app = express();
 
-app.use(quickstart({navigation}));
+app.use(quickstart({navigation, base: 'http://localhost:3001/'}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);
