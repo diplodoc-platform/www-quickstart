@@ -23,7 +23,7 @@ Publish static to CDN
 s3cmd sync ./node_modules/@diplodoc/quickstart s3:/some/static/root
 ```
 
-## DEv Requirements
+## Dev Requirements
 
 - node >= 18
 - haproxy (would be autoinstalle in [haproxy/start](proxy/start) script)
