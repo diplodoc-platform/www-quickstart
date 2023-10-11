@@ -39,8 +39,8 @@ export const router = ({navigation, urls = {}, base = '/static'} = {}) => {
     });
 
     router.get('/', root({urls, navigation, base}));
-    router.use(urls.api || '/api', api());
-    router.use(urls.auth || '/auth', auth());
+    router.use(urls.api || '/api', api(router));
+    router.use(urls.auth || '/auth', auth(router));
 
     return router;
 };

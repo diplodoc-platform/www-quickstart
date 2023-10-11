@@ -10,9 +10,7 @@ const call = (handle) => async (req, res, next) => {
     }
 };
 
-export const router = () => {
-    const router = new Router();
-
+export const router = (router) => {
     router.post('/models', call(models));
     router.post('/actions/:action', call(actions));
 

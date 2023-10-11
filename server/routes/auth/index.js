@@ -6,9 +6,7 @@ const GITHUB_CLIENT_ID = expectEnv('GITHUB_CLIENT_ID')();
 const GITHUB_CLIENT_SECRET = expectEnv('GITHUB_CLIENT_SECRET')();
 const AUTH_SCOPES = ['public_repo'].join(',');
 
-export const router = () => {
-    const router = new Router();
-
+export const router = (router) => {
     router.get('/login/github', (req, res) => {
         res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=${AUTH_SCOPES}`)
     });
