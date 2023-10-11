@@ -15,6 +15,11 @@ type Env = {
     isServer: boolean;
 };
 
+const {
+    NODE_ENV,
+} = process.env;
+const isDev = NODE_ENV === 'development';
+
 const server = resolve(__dirname, 'build', 'server');
 const client = resolve(__dirname, 'build', 'client');
 const externals = (object) => Object.keys(object).reduce((acc, key) => {
@@ -159,7 +164,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                 port: 3001,
                 client: {
                     overlay: false,
-                    webSocketURL: 'wss://localhost/static/ws',
+                    webSocketURL: 'wss://localhost:3001/static/ws',
                 },
                 devMiddleware: {
                     writeToDisk: (path) => path.startsWith(server) && !path.includes('.hot-update.js')
@@ -183,6 +188,6 @@ function Manifest(manifest) {
 }
 
 export default [
-    config({ isDev: true, isServer: true }),
-    config({ isDev: true, isServer: false }),
+    config({ isDev, isServer: true }),
+    config({ isDev, isServer: false }),
 ];
