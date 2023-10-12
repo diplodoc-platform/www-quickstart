@@ -8,6 +8,8 @@ import { stringify } from '~/utils';
 
 import * as env from '~/configs/env';
 import * as manifest from '~/configs/manifest';
+import * as navigation from '~/configs/navigation';
+import * as urls from '~/configs/urls';
 import { resolvers } from './resolvers';
 import { Transferable } from './components/Transferable';
 
@@ -20,6 +22,8 @@ export const App = memo(() => {
             <title>My app</title>
             <Transferable id="config-env" data={ stringify({ ...env, isServer: true }) }/>
             <Transferable id="config-manifest" data={ stringify(manifest) }/>
+            <Transferable id="config-navigation" data={ stringify(navigation) }/>
+            <Transferable id="config-urls" data={ stringify(urls) }/>
             {
                 manifest.styles.map((style) => (
                     <link key={ style } rel="stylesheet" href={ style }/>

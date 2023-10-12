@@ -12,8 +12,8 @@ export const router = ({navigation, urls, base}) => {
 
         const state = {
             ...config(req),
-            urls,
             manifest: bootstrap,
+            urls,
             navigation
         };
 
