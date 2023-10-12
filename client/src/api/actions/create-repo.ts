@@ -24,3 +24,10 @@ export async function CreateRepo({ owner, name, template }: Props) {
 
     return RepoResult(data);
 }
+
+CreateRepo.displayName = 'create-repo';
+CreateRepo.displayProps = '*';
+CreateRepo.displayTags = {
+    'span.kind': 'client',
+    'peer.service': 'cloud',
+};
