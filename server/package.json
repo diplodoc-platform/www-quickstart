@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_OPTIONS='--conditions=server' nodemon -e js,cjs,json --watch . --watch ../client/build/server ./dev",
+    "start": "NODE_OPTIONS='--conditions=server' node ./start",
+    "dev": "NODE_OPTIONS='--conditions=server' nodemon -e js,cjs,json --watch . --watch ../client/build/server ./dev",
     "secrets": "../scripts/secrets"
   },
   "keywords": [],

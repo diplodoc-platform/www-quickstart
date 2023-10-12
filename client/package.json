@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
+    "dev": "webpack serve",
     "build": "webpack",
     "clean": "rm -rf build"
   },
