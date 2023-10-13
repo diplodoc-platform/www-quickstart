@@ -19,7 +19,7 @@ const nodekit = new NodeKit({
 
 const DEFAULT_URLS = { api: '/api', auth: '/auth' };
 
-export const router = ({navigation, urls = {}, base = '/static'} = {}) => {
+export const router = ({navigation, urls = {}, base = '/static', fetch} = {}) => {
     urls = {...DEFAULT_URLS, urls};
 
     const router = new Router();
@@ -38,7 +38,7 @@ export const router = ({navigation, urls = {}, base = '/static'} = {}) => {
         next();
     });
 
-    router.get('/', root({urls, navigation, base}));
+    router.get('/', root({urls, navigation, base, fetch}));
     router.use(urls.api || '/api', api(router));
     router.use(urls.auth || '/auth', auth(router));
 

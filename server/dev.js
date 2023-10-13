@@ -10,7 +10,11 @@ const {
 
 const app = express();
 
-app.use(quickstart({navigation, base: 'http://localhost:3001/'}));
+app.use(quickstart({
+    navigation,
+    base: 'http://localhost:3001/',
+    fetch: gozoraFetch
+}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);

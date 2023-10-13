@@ -8,7 +8,7 @@ const ENV = {
     saResourceId: envconfig.expectEnv('FOLDER_ID')('b1g1j115gl75k4sqiu0m')
 };
 
-export default (req) => ({
+export default (req, fetch) => ({
     api: {
         request: req.ctx.request.bind(req.ctx)
     },
@@ -19,5 +19,6 @@ export default (req) => ({
     server: {
         ...req.session,
         ...ENV,
+        fetch
     }
 });
