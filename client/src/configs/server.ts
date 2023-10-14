@@ -12,6 +12,7 @@ export type Server = {
     saAccessKey: string;
     saPrivateKey: string;
     saResourceId: string;
+    fetch?: typeof global.fetch;
 };
 
 const state = config<Server>('server');
@@ -29,3 +30,5 @@ export const saAccessKey = state.saAccessKey;
 export const saPrivateKey = state.saPrivateKey;
 
 export const saResourceId = state.saResourceId;
+
+export const fetch = state.fetch || global.fetch;
