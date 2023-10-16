@@ -38,7 +38,7 @@ export const router = ({navigation, urls = {}, base = '/static', customFetch = n
         next();
     });
 
-    router.get('/', root({urls, navigation, base}));
+    router.get('/', root({urls, navigation, base, customFetch}));
     router.use(urls.api || '/api', api(router));
     router.use(urls.auth || '/auth', auth(router, customFetch));
 

@@ -1,4 +1,4 @@
-import { Octokit } from 'octokit';
+import { Octokit } from '../models/services/octokit';
 import { accessToken } from '~/configs/server';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export async function GhSaveVars({ owner, repo, vars }: Props) {
-    const octokit = new Octokit({ auth: accessToken });
+    const octokit = Octokit();
 
     await Promise.all(vars.map(async ({ name, value }) => {
         return octokit.request('POST /repos/{owner}/{repo}/actions/variables', {

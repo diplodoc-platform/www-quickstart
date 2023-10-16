@@ -1,4 +1,4 @@
-import { Octokit } from 'octokit';
+import { Octokit } from '../models/services/octokit'
 import { RepoResult } from '../models/gh-repo';
 
 import { accessToken } from '~/configs/server';
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export async function CreateRepo({ owner, name, template }: Props) {
-    const octokit = new Octokit({ auth: accessToken });
+    const octokit = Octokit()
 
     const [ template_owner, template_repo ] = template.split('/');
 

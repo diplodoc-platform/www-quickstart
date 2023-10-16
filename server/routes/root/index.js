@@ -4,14 +4,14 @@ import manifest from '@diplodoc/cabinet/manifest';
 
 import config from '../../utils/config.js';
 
-export const router = ({navigation, urls, base}) => {
+export const router = ({navigation, urls, base, customFetch = null}) => {
     const router = new Router();
 
     router.get('/', async (req, res) => {
         const bootstrap = manifest(base || '/static');
 
         const state = {
-            ...config(req),
+            ...config(req, customFetch),
             manifest: bootstrap,
             urls,
             navigation
