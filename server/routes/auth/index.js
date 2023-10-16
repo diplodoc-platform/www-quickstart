@@ -6,14 +6,14 @@ const GITHUB_CLIENT_ID = expectEnv('GITHUB_CLIENT_ID')();
 const GITHUB_CLIENT_SECRET = expectEnv('GITHUB_CLIENT_SECRET')();
 const AUTH_SCOPES = ['public_repo'].join(',');
 
-export const router = (router) => {
+export const router = (router, customFetch = null) => {
     router.get('/login/github', (req, res) => {
         res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=${AUTH_SCOPES}`)
     });
 
     router.get('/login/github/callback', async (req, res) => {
-        const accessToken = await getAccessToken(req.query);
-        const user = await fetchGitHubUser(accessToken);
+        const accessToken = await getAccessToken(req.query, customFetch);
+        const user = await fetchGitHubUser(accessToken, customFetch);
 
         if (user) {
             req.session.accessToken = accessToken;
@@ -36,8 +36,9 @@ export const router = (router) => {
     return router;
 };
 
-async function getAccessToken({code}) {
-    const request = await fetch('https://github.com/login/oauth/access_token', {
+async function getAccessToken({code}, customFetch = null) {
+    const fetchFunction = customFetch ? customFetch : fetch
+    const request = await fetchFunction('https://github.com/login/oauth/access_token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ async function getAccessToken({code}) {
     return params.get("access_token");
 }
 
-async function fetchGitHubUser(accessToken) {
+async function fetchGitHubUser(accessToken, customFetch = null) {
     const octokit = new Octokit({auth: accessToken});
 
     const result = await octokit.request('GET /user');
