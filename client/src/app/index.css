@@ -1,6 +1,7 @@
 @import '@gravity-ui/uikit/styles/styles.css';
-@import './theme.css';
 /*@import '@gravity-ui/page-constructor/styles/styles.css';*/
+@import './theme.css';
+
 
 html, body {
     min-height: 100vh;

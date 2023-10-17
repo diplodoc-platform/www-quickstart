@@ -30,7 +30,7 @@ export const App = memo(() => {
                 ))
             }
         </head>
-        <body className="g-root g-root_theme_dark">
+        <body>
         <ErrorBoundary fallback={ <div>'Error...'</div> }>
             <Resolver fallback={ <div></div> } resolvers={ resolvers }>
                 <Setup/>
