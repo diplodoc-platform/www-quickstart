@@ -45,7 +45,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
         ctx.request(GhSaveVars, {
             owner, repo, vars: [
                 { name: 'DIPLODOC_STORAGE_REGION', value: 'ru-central1' },
-                { name: 'DIPLODOC_STORAGE_ENDPOINT', value: 'storage.yandexcloud.net' },
+                { name: 'DIPLODOC_STORAGE_ENDPOINT', value: 'https://storage.yandexcloud.net' },
                 { name: 'DIPLODOC_PROJECT_NAME', value: prefix },
             ]
         }),
