@@ -1,21 +1,26 @@
 import 'dotenv/config';
-
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import crypto from "node:crypto"
 import express from 'express';
+
 import {router as quickstart} from './index.js';
 import navigation from "./navigation.js";
+import getCSP from "./csp.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const {
     PORT = 3000,
 } = process.env;
 
+const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+
 const app = express();
 
-app.use('/static', express.static(path.join(__dirname, '../client/build')))
+app.use(function(req, res, next) {
+    res.setHeader('x-nonce', nonce);
+    res.setHeader('Content-Security-Policy', getCSP('123'));
+
+    next();
+});
 
 app.use(quickstart({navigation}));
 
