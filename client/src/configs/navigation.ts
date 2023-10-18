@@ -1,5 +1,5 @@
 import type { NavigationData } from '@gravity-ui/page-constructor';
-import { config } from './contig';
+import { config } from './config';
 
 const state = config<NavigationData>('navigation');
 

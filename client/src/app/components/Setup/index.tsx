@@ -4,7 +4,6 @@ import { useModel } from '@modelsjs/react';
 
 import { Settings } from '~/models/settings';
 import { isServer, isMobile } from '~/configs/env';
-import * as navigation from '~/configs/navigation';
 import { MobileProvider, ThemeProvider, Platform } from '@gravity-ui/uikit';
 import { PageConstructor, PageConstructorProvider } from '@gravity-ui/page-constructor';
 
@@ -12,10 +11,12 @@ import { SetupSteps } from '../SetupSteps';
 import { User } from '~/models/user';
 import { Repo } from '~/models/repo';
 import { Project } from '~/models/project';
+import { Navigation } from '~/models/navigation';
 
 export const Setup = () => {
     const { theme } = useModel(Settings, {});
     const [ user, userError ] = useModel(User, true);
+    const [ navigation ] = useModel(Navigation, true);
     const [ repo, repoError ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
     const [ link, linkError ] = useModel(Project, {
         id: repo.id,

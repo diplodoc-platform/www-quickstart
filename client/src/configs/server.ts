@@ -1,4 +1,4 @@
-import {config} from './contig';
+import {config} from './config';
 
 if (!process.env.SERVER) {
     throw new Error('Session config is not accessible on client');
@@ -13,6 +13,7 @@ export type Server = {
     saPrivateKey: string;
     saResourceId: string;
     fetch?: typeof globalThis.fetch
+    navigationEndpoint: string;
 };
 
 const state = config<Server>('server');
@@ -32,3 +33,5 @@ export const saPrivateKey = state.saPrivateKey;
 export const saResourceId = state.saResourceId;
 
 export const fetch = state.fetch || globalThis.fetch;
+
+export const navigationEndpoint = state.navigationEndpoint;
