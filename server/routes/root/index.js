@@ -24,7 +24,17 @@ export const router = ({navigation, urls, base, customFetch = null}) => {
             onShellReady() {
                 res.setHeader('content-type', 'text/html');
                 pipe(res);
-            }
+            },
+            onShellError(error) {
+                console.error(error);
+
+                res.statusCode = 500;
+                res.setHeader('content-type', 'text/html');
+                res.send('<h1>Something went wrong</h1>');
+            },
+            onError(error) {
+                console.error(error);
+            },
         });
     });
 
