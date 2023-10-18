@@ -1,3 +1,3 @@
-export const parse = (string: string) => JSON.parse(atob(string));
+export const parse = (string) => JSON.parse(decodeURIComponent(escape(atob(string))));
 
-export const stringify = (object: object) => btoa(JSON.stringify(object));
+export const stringify = (object) => btoa(unescape(encodeURIComponent(JSON.stringify(object))));
