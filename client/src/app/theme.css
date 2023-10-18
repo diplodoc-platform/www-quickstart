@@ -12,7 +12,7 @@ h6 {
     font-weight: 600;
 }
 
-.g-root {
+.pc-page-constructor.g-root {
     --g-text-header-font-family: 'Manrope', 'Helvetica Neue', 'Arial', 'Helvetica', sans-serif;
     --g-font-family-sans: 'Inter', 'Helvetica Neue', 'Arial', 'Helvetica', sans-serif;
     --g-font-family-monospace: 'Martian Mono', 'Monaco', 'Consolas', 'Ubuntu Mono',
