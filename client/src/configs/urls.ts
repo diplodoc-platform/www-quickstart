@@ -1,4 +1,4 @@
-import { config } from './contig';
+import { config } from './config';
 
 const state = config<{
     auth?: string;
