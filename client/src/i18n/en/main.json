@@ -1,0 +1,10 @@
+{
+  "quickstart": "Quickstart",
+  "login": "Login with",
+  "auth": "Authorization",
+  "github-auth": "Login with GitHub",
+  "repository": "Github repository",
+  "project": "Diplodoc project",
+  "project-created": "Project will be created",
+  "create": "Create"
+}

@@ -55,6 +55,7 @@
     "webpack-sources": "^3.2.3"
   },
   "dependencies": {
+    "@gravity-ui/i18n": "^1.1.0",
     "@yandex-cloud/nodejs-sdk": "2.4",
     "js-yaml": "^4.1.0",
     "libsodium-wrappers": "^0.7.13",

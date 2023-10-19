@@ -16,6 +16,7 @@ export default (req, customFetch = null) => ({
     env: {
         isServer: true,
         isMobile: true,
+        lang: req.get('x-lang') || 'ru',
     },
     server: {
         ...req.session,
