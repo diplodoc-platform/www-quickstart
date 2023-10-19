@@ -1,0 +1,10 @@
+{
+  "quickstart": "Быстрый старт",
+  "login": "Войти с помощью",
+  "auth": "Авторизация",
+  "github-auth": "Войти с помощью GitHub",
+  "repository": "Репозиторий на GitHub",
+  "project": "Проект в Diplodoc",
+  "project-created": "Будет создан проект",
+  "create": "Создать"
+}

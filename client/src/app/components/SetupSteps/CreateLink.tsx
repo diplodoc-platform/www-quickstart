@@ -8,6 +8,9 @@ import { Button, Link } from '@gravity-ui/uikit';
 import { api } from '~/configs/urls';
 
 import * as cs from './index.module.css';
+import i18n from "../../../i18n/configureLang";
+
+const i18nK = i18n('main');
 
 export const CreateLink = memo(() => {
     const [ repo ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
@@ -52,13 +55,13 @@ export const CreateLink = memo(() => {
         return (
             <div className={ cs.step_body }>
                 <div className={ cs.repo_text }>
-                    Будет создан проект<br/>
+                    { i18nK(`project-created`)}<br/>
                     gh-{ repo.id }
                 </div>
                 <Button className={ cs.repo_button } size={ 'l' } view={ 'action' }
                         loading={ loading }
                         onClick={ onClick }>
-                    Создать
+                    { i18nK(`create`)}
                 </Button>
             </div>
         );

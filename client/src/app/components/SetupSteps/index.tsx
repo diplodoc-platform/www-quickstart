@@ -11,6 +11,9 @@ import { CreateRepo } from './CreateRepo';
 import { CreateLink } from './CreateLink';
 
 import { resolvers } from '../../resolvers';
+import i18n from "../../../i18n/configureLang";
+
+const i18nK = i18n('main');
 
 const Step: FC<PropsWithChildren<{
     title: string;
@@ -85,11 +88,11 @@ export const SetupSteps = ({ user, repo, link }) => {
     return (
         <div className={ cs.root }>
             <div className={ cs.content }>
-                <h1 className={ cs.title }>Быстрый старт</h1>
+                <h1 className={ cs.title }>{ i18nK('quickstart')}</h1>
                 <ul className={ cs.steps }>
-                    <Step title={ 'Авторизация' } state={ _auth } step={ Authorize }/>
-                    <Step title={ 'Репозиторий на GitHub' } state={ _repo } step={ CreateRepo }/>
-                    <Step title={ 'Проект в Diplodoc' } state={ _link } step={ CreateLink }/>
+                    <Step title={ i18nK('login') } state={ _auth } step={ Authorize }/>
+                    <Step title={  i18nK('repository') } state={ _repo } step={ CreateRepo }/>
+                    <Step title={ i18nK('project') } state={ _link } step={ CreateLink }/>
                 </ul>
             </div>
         </div>

@@ -12,8 +12,13 @@ import * as navigation from '~/configs/navigation';
 import * as urls from '~/configs/urls';
 import { resolvers } from './resolvers';
 import { Transferable } from './components/Transferable';
+import {configureLang, i18n} from '../i18n/configureLang';
+
 
 export const App = memo(() => {
+    configureLang(env.lang || 'ru')
+    i18n.setLang(env.lang || 'ru')
+
     return (
         <html>
         <head>
