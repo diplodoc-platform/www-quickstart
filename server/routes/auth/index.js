@@ -1,4 +1,4 @@
-import {Octokit} from 'octokit';
+import {Octokit, Octokit} from 'octokit';
 import {Router} from 'express';
 import {expectEnv} from '../../utils/envconfig.js';
 
@@ -12,8 +12,14 @@ export const router = (router, customFetch = null) => {
     });
 
     router.get('/login/github/callback', async (req, res) => {
-        const accessToken = await getAccessToken(req.query, customFetch);
-        const user = await fetchGitHubUser(accessToken, customFetch);
+        let user;
+        try {
+            const accessToken = await getAccessToken(req.query, customFetch);
+            user = await fetchGitHubUser(accessToken, customFetch);
+        } catch (err) {
+            res.status(403);
+            res.send('Could not fetch github user info');
+        }
 
         if (user) {
             req.session.accessToken = accessToken;
@@ -58,7 +64,7 @@ async function getAccessToken({code}, customFetch = null) {
 }
 
 async function fetchGitHubUser(accessToken, customFetch = null) {
-    const octokit = new Octokit({auth: accessToken});
+    const octokit = new Octokit({auth: accessToken, ...(customFetch ? {request: {fetch: customFetch}} : {})})
 
     const result = await octokit.request('GET /user');
 
