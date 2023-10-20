@@ -6,11 +6,12 @@ import navigation from "./navigation.js";
 
 const {
     PORT = 3000,
+    BASE = '',
 } = process.env;
 
 const app = express();
 
-app.use(quickstart({navigation, base: 'http://localhost:3001/'}));
+app.use(BASE, quickstart({navigation, base: BASE, staticBase: 'http://localhost:3001/'}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);

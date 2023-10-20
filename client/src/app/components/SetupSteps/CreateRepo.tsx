@@ -6,7 +6,7 @@ import { Repo } from '~/models/repo';
 
 import { Button, Link } from '@gravity-ui/uikit';
 
-import { api } from '~/configs/urls';
+import { api, base } from '~/configs/urls';
 
 import * as cs from './index.module.css';
 import i18n from "../../../i18n/configureLang";
@@ -21,7 +21,7 @@ export const CreateRepo = memo(() => {
     const onClick = useCallback(async () => {
         setLoading(true);
 
-        const request = await fetch(api + '/actions/create-repo', {
+        const request = await fetch(base + api + '/actions/create-repo', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'

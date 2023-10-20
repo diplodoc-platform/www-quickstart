@@ -11,13 +11,14 @@ const __dirname = path.dirname(__filename);
 
 const {
     PORT = 3000,
+    BASE = '',
 } = process.env;
 
 const app = express();
 
 app.use('/static', express.static(path.join(__dirname, '../client/build')))
 
-app.use(quickstart({navigation}));
+app.use(BASE, quickstart({navigation, base: BASE}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);
