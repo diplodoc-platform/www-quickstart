@@ -32,7 +32,7 @@ export const App = memo(() => {
             <Transferable id="config-urls" data={ stringify(urls) }/>
             {
                 manifest.styles.map((style) => (
-                    <link key={ style } rel="stylesheet" href={ style }/>
+                    <link key={ style } rel="stylesheet" href={ urls.base ? urls.base + style : style }/>
                 ))
             }
         </head>

@@ -14,4 +14,4 @@ export const isServer = Boolean(process.env.SERVER);
 
 export const isMobile = state.isMobile;
 
-export const lang = state.lang;
+export const lang = state.lang || '';

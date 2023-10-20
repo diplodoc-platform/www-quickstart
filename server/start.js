@@ -12,13 +12,17 @@ const __dirname = path.dirname(__filename);
 const {
     PORT = 3000,
     BASE = '',
+    EXPRESS_STATIC
 } = process.env;
 
 const app = express();
 
-app.use('/static', express.static(path.join(__dirname, '../client/build')))
+if(EXPRESS_STATIC) {
+    app.use(BASE + '/static', express.static(path.join(__dirname, '../client/build')))
+}
 
 app.use(BASE, quickstart({navigation, base: BASE}));
+app.use('/en' + BASE, quickstart({navigation, base: '/en' + BASE}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);
