@@ -16,10 +16,10 @@
     "dev:server": "npm run dev -w server",
     "secrets": "npm run secrets --workspaces --if-present",
     "prepublishOnly": "npm run clean --workspaces --if-present && npm run build --workspaces --if-present",
-    "docker:build": "docker build . --build-arg NODE_OPTIONS=${NODE_OPTIONS} --build-arg s3_access_key_id=${FRONTEND_S3_ACCESS_KEY_ID} --build-arg s3_secret_access_key=${FRONTEND_S3_SECRET_ACCESS_KEY} -t registry.yandex.net/data-ui/diplodoc-www:${targetRevision}",
-    "docker:push": "docker push registry.yandex.net/data-ui/diplodoc-www:${targetRevision}",
-    "docker:release": "ya tool dctl release docker -t ${targetRevision} data-ui/diplodoc-www",
-    "docker:get-tag": "echo ${targetRevision}"
+    "docker:build": "docker build . --build-arg NODE_OPTIONS=${NODE_OPTIONS} --build-arg s3_access_key_id=${FRONTEND_S3_ACCESS_KEY_ID} --build-arg s3_secret_access_key=${FRONTEND_S3_SECRET_ACCESS_KEY} -t registry.yandex.net/data-ui/diplodoc-www:quickstart-${targetRevision}",
+    "docker:push": "docker push registry.yandex.net/data-ui/diplodoc-www:quickstart-${targetRevision}",
+    "docker:release": "ya tool dctl release docker -t quickstart-${targetRevision} data-ui/diplodoc-www",
+    "docker:get-tag": "echo quickstart-${targetRevision}"
   },
   "author": "",
   "license": "ISC",
