@@ -1,5 +1,5 @@
 import type { ModelContext, GHResponse, GHError } from '../../types';
-import { Octokit } from 'octokit';
+import { Octokit } from './services/octokit';
 import { GhUser } from './gh-user';
 import { NotFoundError } from '../errors';
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export async function GhRepo({ owner, repo }: Props, ctx: ModelContext): Promise<ReturnType<typeof RepoResult>> {
-    const octokit = new Octokit({ auth: accessToken });
+    const octokit = Octokit();
 
     try {
         if (!owner) {
