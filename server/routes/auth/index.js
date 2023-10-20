@@ -18,7 +18,8 @@ export const router = (router, customFetch = null) => {
         if (user) {
             req.session.accessToken = accessToken;
             req.session.githubId = user.id;
-            res.redirect('/');
+
+            res.redirect(req.baseUrl || '/');
         } else {
             res.status(403);
             res.send('Login did not succeed!')
@@ -30,7 +31,7 @@ export const router = (router, customFetch = null) => {
             req.session = null;
         }
 
-        res.redirect('/');
+        res.redirect(req.baseUrl || '/');
     });
 
     return router;

@@ -2,7 +2,7 @@ import type { Model } from '@modelsjs/model';
 import type { TResolver } from '@modelsjs/resolver';
 import { set, getProps, ModelError } from '@modelsjs/model';
 import { RequestStrategy, IRequestStrategyImpl } from './strategy';
-import { api } from '~/configs/urls';
+import { api, base } from '~/configs/urls';
 import { sign } from '~/utils';
 
 const requests: Record<string, Defer> = {};
@@ -61,7 +61,7 @@ async function request(models: Record<string, OJSON>) {
         return;
     }
 
-    const request = await fetch(api + '/models', {
+    const request = await fetch(base + api + '/models', {
         method: 'post',
         body: JSON.stringify({models}),
         headers: {
