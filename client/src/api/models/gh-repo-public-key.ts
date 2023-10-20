@@ -1,5 +1,4 @@
-import { Octokit } from 'octokit';
-import { accessToken } from '~/configs/server';
+import { Octokit } from './services/octokit';
 
 type Props = {
     owner: string;
@@ -7,7 +6,7 @@ type Props = {
 };
 
 export async function GhRepoPublicKey({ owner, repo }: Props) {
-    const octokit = new Octokit({ auth: accessToken });
+    const octokit = Octokit();
 
     const { data } = await octokit.request('GET /repos/{owner}/{repo}/actions/secrets/public-key', { owner, repo });
 

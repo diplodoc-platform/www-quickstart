@@ -1,10 +1,10 @@
-import { Octokit } from 'octokit';
+import { Octokit } from './services/octokit';
 import { AuthError } from '../errors';
 
 import { accessToken } from '~/configs/server';
 
 export async function GhUser() {
-    const octokit = new Octokit({ auth: accessToken });
+    const octokit = Octokit();
 
     try {
         const { data } = await octokit.request('GET /user');
