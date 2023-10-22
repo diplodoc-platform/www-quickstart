@@ -17,7 +17,7 @@ export async function GhUser() {
             avatar: data.avatar_url,
         };
     } catch (error) {
-        throw new AuthError();
+        throw new AuthError(error?.message);
     }
 }
 
