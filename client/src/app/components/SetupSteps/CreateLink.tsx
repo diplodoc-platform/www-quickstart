@@ -67,11 +67,19 @@ export const CreateLink = memo(() => {
         );
     }
 
-    return (
-        <div className={cs.project}>
-            Будет доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
-            <br/>
-            после завершения <Link className={ cs.project_link } href={ project.deploy.link } target="_blank">релиза</Link>.
-        </div>
-    )
+    if (project.deploy) {
+        return (
+            <div className={cs.project}>
+                Будет доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
+                <br/>
+                после завершения <Link className={ cs.project_link } href={ project.deploy.link } target="_blank">релиза</Link>.
+            </div>
+        );
+    } else {
+        return (
+            <div className={cs.project}>
+                Доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
+            </div>
+        );
+    }
 });
