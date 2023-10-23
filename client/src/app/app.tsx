@@ -25,14 +25,13 @@ export const App = memo(() => {
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>My app</title>
-            {urls.base && <base href={urls.base.substring(1) + '/'}/>}
             <Transferable id="config-env" data={ stringify({ ...env, isServer: true }) }/>
             <Transferable id="config-manifest" data={ stringify(manifest) }/>
             <Transferable id="config-navigation" data={ stringify(navigation) }/>
             <Transferable id="config-urls" data={ stringify(urls) }/>
             {
                 manifest.styles.map((style) => (
-                    <link key={ style } rel="stylesheet" href={ urls.base ? urls.base + style : style }/>
+                    <link key={ style } rel="stylesheet" href={ urls.base && !style.startsWith('http')? urls.base + style : style }/>
                 ))
             }
         </head>

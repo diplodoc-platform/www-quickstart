@@ -68,6 +68,6 @@ export const CreateLink = memo(() => {
     }
 
     return (
-        <Link className={ cs.auth_link } href={ link.link } target="_blank">{ link.name }</Link>
+        <Link className={ cs.auth_link } href={ base + link.link } target="_blank">{ link.name }</Link>
     )
 });

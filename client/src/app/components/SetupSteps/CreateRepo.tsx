@@ -64,7 +64,7 @@ export const CreateRepo = memo(() => {
     }
 
     return (
-        <Link className={ cs.auth_link } href={ repo.link } target="_blank">{ repo.fullname }</Link>
+        <Link className={ cs.auth_link } href={ base + repo.link } target="_blank">{ repo.fullname }</Link>
     )
 });
 
