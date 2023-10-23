@@ -20,6 +20,7 @@ export const router = ({navigation, urls, staticBase, customFetch = null}) => {
         const {pipe} = cabinet(state).render({
             url: req.url
         }, {
+            bootstrapScripts: bootstrap.scripts.map(el => urls.base && !el.startsWith('http') ? urls.base + el : el),
             onShellReady() {
                 res.setHeader('content-type', 'text/html');
                 pipe(res);
