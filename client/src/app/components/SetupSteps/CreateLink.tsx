@@ -8,17 +8,11 @@ import { Button, Link } from '@gravity-ui/uikit';
 import { api, base } from '~/configs/urls';
 
 import * as cs from './index.module.css';
-import i18n from "../../../i18n/configureLang";
+import i18n from '../../../i18n/configureLang';
 
 const i18nK = i18n('main');
 
-export const CreateLink = memo(() => {
-    const [ repo ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
-    const [ project, error ] = useModel(Project, {
-        id: repo.id,
-        repo: repo.name,
-        owner: repo.owner,
-    }, true);
+const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project }) => {
     const [ loading, setLoading ] = useState(false);
 
     const onClick = useCallback(async () => {
@@ -38,14 +32,37 @@ export const CreateLink = memo(() => {
 
         const response = await request.json();
 
-        setLoading(false);
-
         if (response.data) {
             set(project, response.data);
         } else if (response.error) {
             set(project, new ModelError(project, response.error));
         }
+
+        setLoading(false);
     }, [ setLoading ]);
+
+    return (
+        <div className={ cs.step_body }>
+            <div className={ cs.repo_text }>
+                { i18nK(`project-created`) }<br/>
+                gh-{ repo.id }
+            </div>
+            <Button className={ cs.repo_button } size={ 'l' } view={ 'action' }
+                    loading={ loading }
+                    onClick={ onClick }>
+                { i18nK(`create`) }
+            </Button>
+        </div>
+    );
+});
+
+export const CreateLink = memo(() => {
+    const [ repo ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
+    const [ project, error ] = useModel(Project, {
+        id: repo.id,
+        repo: repo.name,
+        owner: repo.owner,
+    }, true);
 
     if (error) {
         if (error.code !== 'NOTFOUND') {
@@ -53,31 +70,23 @@ export const CreateLink = memo(() => {
         }
 
         return (
-            <div className={ cs.step_body }>
-                <div className={ cs.repo_text }>
-                    { i18nK(`project-created`)}<br/>
-                    gh-{ repo.id }
-                </div>
-                <Button className={ cs.repo_button } size={ 'l' } view={ 'action' }
-                        loading={ loading }
-                        onClick={ onClick }>
-                    { i18nK(`create`)}
-                </Button>
-            </div>
+            <EmptyCreateLink repo={ repo } project={ project }/>
         );
     }
 
     if (project.deploy) {
         return (
-            <div className={cs.project}>
-                Будет доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
+            <div className={ cs.project }>
+                Будет доступен по <Link className={ cs.project_link } href={ project.link }
+                                        target="_blank">ссылке</Link>
                 <br/>
-                после завершения <Link className={ cs.project_link } href={ project.deploy.link } target="_blank">релиза</Link>.
+                после завершения <Link className={ cs.project_link } href={ project.deploy.link }
+                                       target="_blank">релиза</Link>.
             </div>
         );
     } else {
         return (
-            <div className={cs.project}>
+            <div className={ cs.project }>
                 Доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
             </div>
         );
