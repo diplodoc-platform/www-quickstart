@@ -38,8 +38,9 @@ export async function Project({ repo, owner }: Props, ctx: ModelContext) {
     }
 
     return {
+        id: saId,
         name: prefix,
-        link: `https://${bucket}--${prefix}.viewer.diplodoc.com`,
+        link: `https://${bucket}---${prefix}.viewer.diplodoc.com`,
         deploy,
     };
 }

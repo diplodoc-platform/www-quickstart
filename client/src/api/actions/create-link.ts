@@ -62,7 +62,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
 
     return {
         name: prefix,
-        link: `https://${bucket}--${prefix}.viewer.diplodoc.com`,
+        link: `https://${bucket}---${prefix}.viewer.diplodoc.com`,
         deploy,
     };
 }

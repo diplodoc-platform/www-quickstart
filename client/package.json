@@ -12,14 +12,14 @@
   "exports": {
     ".": {
       "server": "./build/server/app.cjs",
-      "client": "./build/client/app.cjs",
-      "default": "./build/client/app.cjs"
+      "client": "./build/client/app.js",
+      "default": "./build/client/app.js"
     },
     "./manifest": "./build/client/manifest.cjs",
     "./*": {
       "server": "./build/server/*.cjs",
-      "client": "./build/client/*.cjs",
-      "default": "./build/client/*.cjs"
+      "client": "./build/client/*.js",
+      "default": "./build/client/*.js"
     }
   },
   "keywords": [],
@@ -48,6 +48,8 @@
     "postcss-loader": "^7.3.3",
     "react-error-boundary": "^4.0.11",
     "react-router-dom": "^6.14.2",
+    "sass": "^1.69.4",
+    "sass-loader": "^13.3.2",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",

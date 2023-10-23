@@ -1,11 +1,11 @@
 import 'dotenv/config';
 
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
 import { DefinePlugin } from 'webpack';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // import StatoscopeWebpackPlugin from '@statoscope/webpack-plugin'
-// import MiniCSSExtractPlugin from 'mini-css-extract-plugin';
+import MiniCSSExtractPlugin from 'mini-css-extract-plugin';
 import { CustomRuntime } from './webpack/plugins/CustomRuntime';
 
 import {dependencies} from './package.json';
@@ -28,7 +28,10 @@ const externals = (object) => Object.keys(object).reduce((acc, key) => {
 }, {})
 
 const config = ({ isServer, isDev = false }: Env) => {
+    const env = isServer ? 'server' : 'client';
+
     return {
+        mode: isDev ? 'development' : 'production',
         target: isServer ? 'node' : 'web',
         devtool: 'source-map',
         entry: {
@@ -41,8 +44,8 @@ const config = ({ isServer, isDev = false }: Env) => {
         output: {
             path: resolve(__dirname, 'build'),
             publicPath: isServer ? '' : 'auto',
-            filename: isServer ? 'server/[name].cjs' : 'client/[name].cjs',
-            chunkFilename: '[name].cjs',
+            filename: isServer ? 'server/[name].cjs' : isDev ? 'client/[name].js' : 'client/[name].[contenthash:8].js',
+            chunkFilename: isServer ? 'server/[name].cjs' : isDev ? 'client/[name].js' : 'client/[name].[contenthash:8].js',
             ...(isServer ? {
                 iife: false,
                 libraryTarget: 'commonjs2',
@@ -106,12 +109,26 @@ const config = ({ isServer, isDev = false }: Env) => {
                     }
                 } ],
                 exclude: /node_modules\/(?!@modelsjs)/
+            }, {
+                test: /\.css$/,
+                use:  [
+                    {
+                        loader: MiniCSSExtractPlugin.loader,
+                        options: {
+                            esModule: false,
+                            emit: !isServer
+                        }
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                auto: (path) => path.endsWith(".module.css"),
+                            }
+                        }
+                    }
+                ],
             } ],
-        },
-        experiments: {
-            css: {
-                exportsOnly: isServer,
-            }
         },
         plugins: [
             new DefinePlugin({
@@ -130,7 +147,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                                 acc.styles.push(manifest[key]);
                             }
 
-                            if (key.endsWith('.cjs')) {
+                            if (key.endsWith('.js')) {
                                 acc.scripts.push(manifest[key]);
                             }
 
@@ -146,11 +163,10 @@ const config = ({ isServer, isDev = false }: Env) => {
             //     analyzerMode: 'static'
             // }),
             // new StatoscopeWebpackPlugin(),
-            // new MiniCSSExtractPlugin({
-            //     filename: isDev ? '[name].css' : '[name].[contenthash:8].css',
-            //     chunkFilename: isDev ? '[name].css' : '[name].[contenthash:8].css',
-            //     ignoreOrder: true,
-            // }),
+            new MiniCSSExtractPlugin({
+                filename: join(env, isDev ? '[name].[contenthash:8].css' : '[name].css'),
+                ignoreOrder: true,
+            }),
             isServer && new CustomRuntime()
         ].filter(Boolean),
         cache: {

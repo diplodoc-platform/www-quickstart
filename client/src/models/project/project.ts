@@ -5,6 +5,8 @@ import { Prefetch } from '~/resolvers/strategy';
 
 @resolvable(Prefetch('project'))
 export class Project extends Model<{ id: string, repo: string, owner: string }> implements ServerProject {
+    id!: string;
+
     name!: string;
 
     link?: string;

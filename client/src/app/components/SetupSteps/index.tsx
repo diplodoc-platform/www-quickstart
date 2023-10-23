@@ -23,12 +23,6 @@ const Step: FC<PropsWithChildren<{
     };
     step: JSXElementConstructor<any>
 }>> = ({ title, state, step: Step }) => {
-    // const [ firstRender, setFirstRender ] = useState(true);
-    //
-    // useEffect(() => {
-    //     setFirstRender(false);
-    // }, []);
-
     return (
         <Resolver fallback={ 'Loading...' } resolvers={ resolvers }>
             <ErrorBoundary fallbackRender={ ({ error }) => error.message }>

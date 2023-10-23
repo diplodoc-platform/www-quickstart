@@ -6,6 +6,10 @@ import { accessToken } from '~/configs/server';
 export async function GhUser() {
     const octokit = Octokit();
 
+    if (!accessToken) {
+        throw new AuthError('Unauthorized');
+    }
+
     try {
         const { data } = await octokit.request('GET /user');
 

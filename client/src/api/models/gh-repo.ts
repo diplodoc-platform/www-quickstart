@@ -3,8 +3,6 @@ import { Octokit } from './services/octokit';
 import { GhUser } from './gh-user';
 import { NotFoundError } from '../errors';
 
-import { accessToken } from '~/configs/server';
-
 type Props = {
     owner: string;
     repo: string;
