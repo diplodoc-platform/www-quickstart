@@ -8,10 +8,15 @@ export type GHError = {
 export type ModelAction<P extends OJSON = OJSON> = {
     (props: P, ctx: ModelContext): Promise<any>;
     displayName: string;
-    displayProps?: string | Record<string, string>;
-    displayResult?: string | Record<string, string | boolean>;
+    displayProps?: string | Record<string, string | boolean | Function>;
+    displayResult?: string | string[] | Record<string, string | boolean | Function>;
 }
 
 export type ModelContext = {
     request<A extends ModelAction<P>, P extends OJSON>(model: A, props?: P): Promise<ReturnType<A>>;
+    logger: {
+        error: Function;
+        warn: Function;
+        log: Function;
+    };
 }

@@ -97,6 +97,15 @@
     font-size: 24px;
 }
 
+.project {
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.project_link {
+    font-size: 18px;
+}
+
 .auth_link_avatar {
     border-radius: 50%;
     margin: 0 10px 0 0;

@@ -1,40 +1,21 @@
-import { SAAddBucketPolicy } from './sa-add-bucket-policy';
+import type { ServiceAccount } from '@yandex-cloud/nodejs-sdk/dist/generated/yandex/cloud/iam/v1/service_account';
+import type { ModelContext } from '../../types';
+
 import { SAAddRole } from './sa-add-role';
 import { SACreate } from './sa-create';
-
-import { saSupervisorId } from '~/configs/server';
-import { ModelContext } from '../../types';
 import { SAGet } from '../models/sa-get';
-import { NotFoundError } from '../errors';
 
 type Props = {
     name: string;
-    bucket: string;
-    prefix: string;
 };
 
-export async function ResolveAccount({ name, bucket, prefix }: Props, ctx: ModelContext) {
-    let serviceAccount;
-    try {
-        serviceAccount = await ctx.request(SAGet, {name});
-    } catch (error) {
-        if (!(error instanceof NotFoundError)) {
-            throw error;
-        }
-    }
+export async function ResolveAccount({ name }: Props, ctx: ModelContext) {
+    let serviceAccount = await ctx.request(SAGet, { name, nullable: true }) as ServiceAccount;
 
     if (!serviceAccount) {
         serviceAccount = await ctx.request(SACreate, { name });
 
-        await Promise.all([
-            ctx.request(SAAddRole, { roleId: 'storage.uploader', subjectId: serviceAccount.id }),
-            ctx.request(SAAddBucketPolicy, {
-                bucket,
-                prefix,
-                users: [ saSupervisorId, serviceAccount.id ],
-                action: '*',
-            }),
-        ]);
+        await ctx.request(SAAddRole, { roleId: 'storage.uploader', subjectId: serviceAccount.id });
     }
 
     return serviceAccount;

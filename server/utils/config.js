@@ -6,7 +6,12 @@ const ENV = {
     saPrivateKey: envconfig.expectEnv('SA_PRIVATE_KEY')().replace(/\\n/g, '\n'),
     saSupervisorId: envconfig.expectEnv('STORAGE_SUPERVISOR_SA')('ajeqk7ra0h8ni9jascao'),
     saResourceId: envconfig.expectEnv('FOLDER_ID')('b1g1j115gl75k4sqiu0m'),
-    navigationEndpoint: envconfig.expectEnv('NAVIGATION_ENDPOINT')()
+    navigationEndpoint: envconfig.expectEnv('NAVIGATION_ENDPOINT')(),
+    s3config: {
+        endpoint: envconfig.expectEnv('S3_ENDPOINT')(),
+        region: envconfig.expectEnv('S3_REGION')(),
+        credentials: envconfig.expectEnv('S3_ACCESS_KEY')(),
+    },
 };
 
 export default (req, customFetch = null) => ({

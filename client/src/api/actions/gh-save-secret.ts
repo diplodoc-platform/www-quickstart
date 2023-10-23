@@ -1,6 +1,5 @@
 import sodium from 'libsodium-wrappers';
 import { Octokit } from '../models/services/octokit';
-import { accessToken } from '~/configs/server';
 import { GhRepoPublicKey } from '../models/gh-repo-public-key';
 import { ModelContext } from '../../types';
 
@@ -10,7 +9,7 @@ type Props = {
     secrets: { name: string, value: string }[]
 };
 
-export async function GhSaveSecret({ owner, repo, secrets }: Props, ctx: ModelContext) {
+export async function GHSaveSecret({ owner, repo, secrets }: Props, ctx: ModelContext) {
     const octokit = Octokit();
     const { key, id: keyId } = await ctx.request(GhRepoPublicKey, { owner, repo });
 
@@ -23,8 +22,8 @@ export async function GhSaveSecret({ owner, repo, secrets }: Props, ctx: ModelCo
     })));
 }
 
-GhSaveSecret.displayName = 'gh-save-secret';
-GhSaveSecret.displayTags = {
+GHSaveSecret.displayName = 'gh-save-secret';
+GHSaveSecret.displayTags = {
     'span.kind': 'client',
     'peer.service': 'github',
 };

@@ -1,5 +1,4 @@
 import { Octokit } from '../models/services/octokit';
-import { accessToken } from '~/configs/server';
 
 type Props = {
     owner: string;
@@ -7,7 +6,7 @@ type Props = {
     vars: { name: string, value: string }[]
 };
 
-export async function GhSaveVars({ owner, repo, vars }: Props) {
+export async function GHSaveVars({ owner, repo, vars }: Props) {
     const octokit = Octokit();
 
     await Promise.all(vars.map(async ({ name, value }) => {
@@ -22,8 +21,8 @@ export async function GhSaveVars({ owner, repo, vars }: Props) {
     return {};
 }
 
-GhSaveVars.displayName = 'gh-save-vars';
-GhSaveVars.displayTags = {
+GHSaveVars.displayName = 'gh-save-vars';
+GHSaveVars.displayTags = {
     'span.kind': 'client',
     'peer.service': 'github',
 };

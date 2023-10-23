@@ -153,6 +153,10 @@ const config = ({ isServer, isDev = false }: Env) => {
             // }),
             isServer && new CustomRuntime()
         ].filter(Boolean),
+        cache: {
+            type: 'filesystem',
+            cacheDirectory: resolve(isServer ? 'cache/server' : 'cache/client')
+        },
         optimization: {
             runtimeChunk: 'single',
             splitChunks: {
@@ -191,3 +195,7 @@ export default [
     config({ isDev, isServer: true }),
     config({ isDev, isServer: false }),
 ];
+
+// gh-708549746
+// gh-ajelppm5ui5aumasnghl
+// common-stable--gh-708549746-sa

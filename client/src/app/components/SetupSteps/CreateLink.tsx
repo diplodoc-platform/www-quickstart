@@ -14,7 +14,7 @@ const i18nK = i18n('main');
 
 export const CreateLink = memo(() => {
     const [ repo ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
-    const [ link, error ] = useModel(Project, {
+    const [ project, error ] = useModel(Project, {
         id: repo.id,
         repo: repo.name,
         owner: repo.owner,
@@ -41,9 +41,9 @@ export const CreateLink = memo(() => {
         setLoading(false);
 
         if (response.data) {
-            set(link, response.data);
+            set(project, response.data);
         } else if (response.error) {
-            set(link, new ModelError(link, response.error));
+            set(project, new ModelError(project, response.error));
         }
     }, [ setLoading ]);
 
@@ -68,6 +68,10 @@ export const CreateLink = memo(() => {
     }
 
     return (
-        <Link className={ cs.auth_link } href={ base + link.link } target="_blank">{ link.name }</Link>
+        <div className={cs.project}>
+            Будет доступен по <Link className={ cs.project_link } href={ project.link } target="_blank">ссылке</Link>
+            <br/>
+            после завершения <Link className={ cs.project_link } href={ project.deploy.link } target="_blank">релиза</Link>.
+        </div>
     )
 });

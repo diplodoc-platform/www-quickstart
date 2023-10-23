@@ -1,7 +1,7 @@
 import {GhRepo} from './gh-repo';
-import {DdProject} from './dd-project';
+import {Project} from './project';
 
 export default {
     'repo': GhRepo,
-    'project': DdProject
+    'project': Project
 }

@@ -15,7 +15,7 @@ export const router = (router, customFetch = null) => {
         let accessToken;
         let user;
         try {
-            const accessToken = await getAccessToken(req.query, customFetch);
+            accessToken = await getAccessToken(req.query, customFetch);
             user = await fetchGitHubUser(accessToken, customFetch);
         } catch (err) {
             res.status(403);

@@ -1,16 +1,16 @@
 export default {
     header: {
         leftItems: [],
-            rightItems: []
+        rightItems: []
     },
     logo: {
         dark: {
             icon: 'https://storage.yandexcloud.net/cloud-www-assets/constructor/storybook/images/icon_1_dark.svg',
-                text: 'ModelsJS'
+            text: 'ModelsJS'
         },
         light: {
             text: 'ModelsJS',
-                icon: 'https://storage.yandexcloud.net/cloud-www-assets/constructor/storybook/images/icon_1_light.svg',
+            icon: 'https://storage.yandexcloud.net/cloud-www-assets/constructor/storybook/images/icon_1_light.svg',
         },
     }
 }
