@@ -8,6 +8,7 @@ export default expressCspHeader({
         'default-src': [NONE],
         'script-src': [SELF, NONCE],
         'style-src': [SELF, INLINE],
-        'img-src': ['data:', SELF, YANDEX_STORAGE, GITHUB_AVATARS]
+        'img-src': ['data:', SELF, YANDEX_STORAGE, GITHUB_AVATARS],
+        'connect-src': [SELF]
     }
 })
