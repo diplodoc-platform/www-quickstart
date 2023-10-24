@@ -20,7 +20,7 @@ export const router = (customFetch = null) => {
     const router = new Router();
 
     router.use(auth(customFetch));
-    router.use(csrf(csrfSecret.keys, {header: 'x-csrf-token'}));
+    router.use(csrf(JSON.parse(csrfSecret), {header: 'x-csrf-token'}));
     router.post('/models', call(models));
     router.post('/actions/:action', call(actions));
 
