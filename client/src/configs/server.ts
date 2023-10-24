@@ -24,6 +24,8 @@ export type Server = {
     s3config: S3Config;
     fetch?: typeof globalThis.fetch
     navigationEndpoint: string;
+    commonBucketName: string;
+    commonBucketEnv: string;
 };
 
 const state = config<Server>('server');
@@ -45,3 +47,7 @@ export const s3config = state.s3config;
 export const fetch = state.fetch || globalThis.fetch;
 
 export const navigationEndpoint = state.navigationEndpoint;
+
+export const commonBucketName = state.commonBucketName;
+
+export const commonBucketEnv = state.commonBucketEnv;

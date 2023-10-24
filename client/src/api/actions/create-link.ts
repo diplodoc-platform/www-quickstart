@@ -7,11 +7,11 @@ import { GHSaveSecret } from './gh-save-secret';
 import { GHSaveVars } from './gh-save-vars';
 import { ResolveDeploy } from './resolve-deploy';
 import { ResolveCredentials } from './resolve-credentials';
-import { AccessError } from '../errors';
+import { AccessError, NotFoundError } from '../errors';
 
-import { s3config } from '~/configs/server';
+import { s3config, commonBucketName, commonBucketEnv } from '~/configs/server';
 
-const bucket = 'common-stable';
+const commonBucket = `${commonBucketName}-${commonBucketEnv}`;
 
 type Props = {
     id: number;
@@ -21,19 +21,24 @@ type Props = {
 
 export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
     // Check that user hase access to repo
-    const { id: ghId, permissions } = await ctx.request(GhRepo, { repo, owner });
-    const saName = `${ bucket }--gh-${ ghId }-sa`;
+    const { id: ghRepoId, permissions } = await ctx.request(GhRepo, { repo, owner });
+    const saName = `${ commonBucket }--gh-${ ghRepoId }-sa`;
+
+    if (!ghRepoId) {
+        throw new NotFoundError(`Repository ${owner}/${repo} not found or not accessible`);
+    }
 
     if (!permissions.admin) {
         throw new AccessError(`User don't have admin permissions on '${ owner }/${ repo }' project.`);
     }
 
     const { id: saId } = await ctx.request(ResolveAccount, { name: saName });
+
     const prefix = `gh-${ saId }`;
 
     const [ head, creds ] = await Promise.all([
-        ctx.request(Head, { bucket, prefix, nullable: true }),
-        ctx.request(ResolveCredentials, { id: saId, bucket, prefix })
+        ctx.request(Head, { bucket: commonBucket, prefix, nullable: true }),
+        ctx.request(ResolveCredentials, { id: saId, bucket: commonBucket, prefix })
     ]);
 
     if (creds.secretAccessKey) {
@@ -47,7 +52,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
             }),
             ctx.request(GHSaveVars, {
                 owner, repo, vars: [
-                    { name: 'DIPLODOC_STORAGE_BUCKET', value: bucket + '/' + prefix },
+                    { name: 'DIPLODOC_STORAGE_BUCKET', value: commonBucketName + '/' + prefix },
                     { name: 'DIPLODOC_STORAGE_REGION', value: s3config.region },
                     { name: 'DIPLODOC_STORAGE_ENDPOINT', value: s3config.endpoint },
                 ]
@@ -61,8 +66,9 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
     }
 
     return {
+        id: saId,
         name: prefix,
-        link: `https://${bucket}---${prefix}.viewer.diplodoc.com`,
+        link: `https://${commonBucketName}---${prefix}.viewer.diplodoc.com`,
         deploy,
     };
 }

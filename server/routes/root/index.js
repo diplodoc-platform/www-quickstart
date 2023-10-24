@@ -3,12 +3,19 @@ import cabinet from '@diplodoc/cabinet';
 import manifest from '@diplodoc/cabinet/manifest';
 
 import config from '../../utils/config.js';
-import getCSP from '../../csp.js';
+import {csp} from '../../middlewares/csp.js';
+import {auth} from "../../middlewares/auth.js";
+import {csrf} from "../../middlewares/csrf.js";
+import {expectEnv} from "../../utils/envconfig.js";
+
+const csrfSecret = expectEnv('CSRF_SECRET')();
 
 export const router = ({navigation, urls, staticBase, customFetch = null}) => {
     const router = new Router();
 
-    router.use(getCSP);
+    router.use(csp(staticBase));
+    router.use(auth(customFetch, {safe: true}));
+    router.use(csrf(csrfSecret.keys, {renew: true}));
 
     router.get('/', async (req, res) => {
         const bootstrap = manifest(staticBase || '/static');

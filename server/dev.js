@@ -11,7 +11,7 @@ const {
 
 const app = express();
 
-app.use(BASE, quickstart({navigation, base: BASE, staticBase: 'http://localhost:3001/'}));
+app.use(BASE, quickstart({navigation, base: BASE}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);

@@ -5,6 +5,7 @@ import { Project } from '~/models/project';
 import { ModelError, set } from '@modelsjs/model';
 import { Button, Link } from '@gravity-ui/uikit';
 
+import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
 
 import * as cs from './index.module.css';
@@ -21,7 +22,9 @@ const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project 
         const request = await fetch(base + api + '/actions/create-link', {
             method: 'post',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'x-user-id': user.id,
+                'x-csrf-token': user.sign,
             },
             body: JSON.stringify({
                 id: repo.id,
@@ -65,10 +68,10 @@ export const CreateLink = memo(() => {
     }, true);
 
     if (error) {
-        if (error.code !== 'NOTFOUND') {
-            return error.message;
-        }
+        return error.message;
+    }
 
+    if (!project.id) {
         return (
             <EmptyCreateLink repo={ repo } project={ project }/>
         );

@@ -2,6 +2,7 @@ import type { Model } from '@modelsjs/model';
 import type { TResolver } from '@modelsjs/resolver';
 import { set, getProps, ModelError } from '@modelsjs/model';
 import { RequestStrategy, IRequestStrategyImpl } from './strategy';
+import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
 import { sign } from '~/utils';
 
@@ -65,19 +66,24 @@ async function request(models: Record<string, OJSON>) {
         method: 'post',
         body: JSON.stringify({models}),
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'x-user-id': user.id,
+            'x-csrf-token': user.sign,
         },
     });
 
-    const result = await request.json();
+    const response = await request.json();
 
-    Object.keys(result.models).forEach((key) => {
+    // TODO: handle csrf renew
+
+    Object.keys(models).forEach((key) => {
+        const result = getResult(response, key);
         const defer = requests[key];
 
         if (defer) {
             delete requests[key];
 
-            const {data, error} = result.models[key];
+            const {data, error} = result;
 
             if (error) {
                 defer.reject(error);
@@ -86,4 +92,23 @@ async function request(models: Record<string, OJSON>) {
             }
         }
     });
+}
+
+function getResult(response: OJSON, key: string) {
+    if (!response.models) {
+        return {
+            error: response.error
+        }
+    }
+
+    if (!response.models[key]) {
+        return {
+            error: {
+                code: 'NODATA',
+                message: 'No Data'
+            }
+        };
+    }
+
+    return response.models[key];
 }

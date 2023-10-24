@@ -1,16 +1,26 @@
 import {Router} from 'express';
 import {handle as models} from './models/index.js';
 import {handle as actions} from './actions/index.js';
+import {auth} from '../../middlewares/auth.js';
+import {csrf} from '../../middlewares/csrf.js';
+import {expectEnv} from "../../utils/envconfig.js";
+
+const csrfSecret = expectEnv('CSRF_SECRET')();
 
 const call = (handle) => async (req, res, next) => {
     try {
         await handle(req, res);
+        next();
     } catch (error) {
         next(error);
     }
 };
 
-export const router = (router) => {
+export const router = (customFetch = null) => {
+    const router = new Router();
+
+    router.use(auth(customFetch));
+    router.use(csrf(csrfSecret.keys, {header: 'x-csrf-token'}));
     router.post('/models', call(models));
     router.post('/actions/:action', call(actions));
 

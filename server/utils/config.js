@@ -1,4 +1,4 @@
-import envconfig from "./envconfig.js";
+import envconfig from './envconfig.js';
 
 const ENV = {
     saId: envconfig.expectEnv('SA_ID')(),
@@ -14,6 +14,16 @@ const ENV = {
     },
 };
 
+const commonBucket = envconfig({
+    common: {
+        commonBucketName: 'common',
+        commonBucketEnv: 'stable'
+    },
+    development: {
+        bucketEnv: 'unstable'
+    }
+})
+
 export default (req, customFetch = null) => ({
     api: {
         request: req.ctx.request.bind(req.ctx)
@@ -23,9 +33,14 @@ export default (req, customFetch = null) => ({
         isMobile: true,
         lang: req.lang || 'ru',
     },
+    user: {
+        ...req.auth,
+        sign: req.csrf
+    },
     server: {
         ...req.session,
         ...ENV,
+        ...commonBucket,
         ...(customFetch ? {fetch: customFetch} : {})
     }
 });

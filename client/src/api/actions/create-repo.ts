@@ -1,8 +1,6 @@
 import { Octokit } from '../models/services/octokit'
 import { RepoResult } from '../models/gh-repo';
 
-import { accessToken } from '~/configs/server';
-
 type Props = {
     owner: string;
     name: string;
@@ -10,11 +8,11 @@ type Props = {
 };
 
 export async function CreateRepo({ owner, name, template }: Props) {
-    const octokit = Octokit()
+    const octokit = Octokit();
 
     const [ template_owner, template_repo ] = template.split('/');
 
-    const { status, data } = await octokit.request('POST /repos/{template_owner}/{template_repo}/generate', {
+    const { data } = await octokit.request('POST /repos/{template_owner}/{template_repo}/generate', {
         template_owner,
         template_repo,
         owner,

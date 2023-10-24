@@ -1,14 +1,25 @@
-import {Octokit} from 'octokit';
 import {Router} from 'express';
-import {expectEnv} from '../../utils/envconfig.js';
+import {Octokit} from 'octokit';
+import envConfig, {expectEnv} from '../../utils/envconfig.js';
 
-const GITHUB_CLIENT_ID = expectEnv('GITHUB_CLIENT_ID')();
-const GITHUB_CLIENT_SECRET = expectEnv('GITHUB_CLIENT_SECRET')();
+const {clientId, clientSecret} = envConfig({
+    common: {
+        clientId: expectEnv('GITHUB_CLIENT_ID')(),
+        clientSecret: expectEnv('GITHUB_CLIENT_SECRET')()
+    },
+    development: {
+        clientId: expectEnv('GITHUB_CLIENT_ID_DEV')(),
+        clientSecret: expectEnv('GITHUB_CLIENT_SECRET_DEV')()
+    }
+});
+
 const AUTH_SCOPES = ['public_repo'].join(',');
 
-export const router = (router, customFetch = null) => {
+export const router = (customFetch = null, base = '/') => {
+    const router = new Router();
+
     router.get('/login/github', (req, res) => {
-        res.redirect(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=${AUTH_SCOPES}`)
+        res.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${AUTH_SCOPES}`)
     });
 
     router.get('/login/github/callback', async (req, res) => {
@@ -27,7 +38,7 @@ export const router = (router, customFetch = null) => {
             req.session.accessToken = accessToken;
             req.session.githubId = user.id;
 
-            res.redirect(req.baseUrl || '/');
+            res.redirect(base || '/');
         } else {
             res.status(403);
             res.send('Login did not succeed!')
@@ -39,7 +50,7 @@ export const router = (router, customFetch = null) => {
             req.session = null;
         }
 
-        res.redirect(req.baseUrl || '/');
+        res.redirect(base || '/');
     });
 
     return router;
@@ -53,8 +64,8 @@ async function getAccessToken({code}, customFetch = null) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
+            client_id: clientId,
+            client_secret: clientSecret,
             code,
         }),
     });
@@ -65,10 +76,16 @@ async function getAccessToken({code}, customFetch = null) {
     return params.get("access_token");
 }
 
-async function fetchGitHubUser(accessToken, customFetch = null) {
+export async function fetchGitHubUser(accessToken, customFetch = null) {
     const octokit = new Octokit({auth: accessToken, ...(customFetch ? {request: {fetch: customFetch}} : {})})
 
-    const result = await octokit.request('GET /user');
+    const {data} = await octokit.request('GET /user');
 
-    return result.data;
+    return {
+        id: data.id,
+        name: data.name,
+        login: data.login,
+        link: data.html_url,
+        avatar: data.avatar_url
+    };
 }

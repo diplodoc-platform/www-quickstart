@@ -4,7 +4,7 @@ export class AuthError extends Error {
     code: string;
 
     constructor(message: string) {
-        super(message || 'No auth');
+        super(message || 'No Auth');
 
         this.code = 'NOAUTH';
     }

@@ -1,6 +1,6 @@
 import type { ModelContext } from '../../types';
 import { Octokit } from './services/octokit';
-import { GhUser } from './gh-user';
+import { login } from '~/configs/user';
 
 type Props = {
     repo: string;
@@ -17,11 +17,7 @@ export interface Result {
 export async function Deploy({ repo, owner }: Props, ctx: ModelContext) {
     const octokit = Octokit();
 
-    if (!owner) {
-        const user = await ctx.request(GhUser);
-
-        owner = user.login;
-    }
+    owner = owner || login;
 
     const deploy = await octokit.request('GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs', {
         owner,

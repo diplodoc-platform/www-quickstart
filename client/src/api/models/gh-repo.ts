@@ -1,22 +1,18 @@
-import type { ModelContext, GHResponse, GHError } from '../../types';
+import type { GHResponse, GHError } from '../../types';
 import { Octokit } from './services/octokit';
-import { GhUser } from './gh-user';
 import { NotFoundError } from '../errors';
+import { login } from '~/configs/user';
 
 type Props = {
     owner: string;
     repo: string;
 };
 
-export async function GhRepo({ owner, repo }: Props, ctx: ModelContext): Promise<ReturnType<typeof RepoResult>> {
+export async function GhRepo({ owner, repo }: Props): Promise<ReturnType<typeof RepoResult>> {
     const octokit = Octokit();
 
     try {
-        if (!owner) {
-            const user = await ctx.request(GhUser);
-
-            owner = user.login;
-        }
+        owner = owner || login;
 
         const result = await octokit.request('GET /repos/{owner}/{repo}', { owner, repo });
         const { data } = result;
@@ -25,7 +21,7 @@ export async function GhRepo({ owner, repo }: Props, ctx: ModelContext): Promise
     } catch (error) {
         switch ((error as GHError)?.status) {
             case 404:
-                throw new NotFoundError('Repository not found');
+                return {};
             default:
                 throw error;
         }
