@@ -2,21 +2,13 @@ import {Router} from 'express';
 import cabinet from '@diplodoc/cabinet';
 import manifest from '@diplodoc/cabinet/manifest';
 
-import { expressCspHeader, NONE, SELF, NONCE, INLINE } from 'express-csp-header';
-
 import config from '../../utils/config.js';
+import getCSP from '../../csp.js';
 
 export const router = ({navigation, urls, staticBase, customFetch = null}) => {
     const router = new Router();
 
-    router.use(expressCspHeader({
-        directives: {
-            'default-src': [NONE],
-            'script-src': [SELF, NONCE],
-            'style-src': [SELF, INLINE],
-            'img-src': ['data:', SELF, 'storage.yandexcloud.net']
-        }
-    }));
+    router.use(getCSP);
 
     router.get('/', async (req, res) => {
         const bootstrap = manifest(staticBase || '/static');
