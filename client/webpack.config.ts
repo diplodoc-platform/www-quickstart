@@ -174,6 +174,7 @@ const config = ({ isServer, isDev = false }: Env) => {
             cacheDirectory: resolve(isServer ? 'cache/server' : 'cache/client')
         },
         optimization: {
+            minimize: !isDev && !isServer,
             runtimeChunk: 'single',
             splitChunks: {
                 chunks: 'all',

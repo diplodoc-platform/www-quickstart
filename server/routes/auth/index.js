@@ -15,7 +15,7 @@ const {clientId, clientSecret} = envConfig({
 
 const AUTH_SCOPES = ['public_repo'].join(',');
 
-export const router = (customFetch = null, base = '/') => {
+export const router = () => {
     const router = new Router();
 
     router.get('/login/github', (req, res) => {
@@ -26,8 +26,8 @@ export const router = (customFetch = null, base = '/') => {
         let accessToken;
         let user;
         try {
-            accessToken = await getAccessToken(req.query, customFetch);
-            user = await fetchGitHubUser(accessToken, customFetch);
+            accessToken = await getAccessToken(req.query, req.fetch);
+            user = await fetchGitHubUser(accessToken, req.fetch);
         } catch (err) {
             res.status(403);
             res.send('Could not fetch github user info');
@@ -38,7 +38,7 @@ export const router = (customFetch = null, base = '/') => {
             req.session.accessToken = accessToken;
             req.session.githubId = user.id;
 
-            res.redirect(base || '/');
+            res.redirect(req.base || '/');
         } else {
             res.status(403);
             res.send('Login did not succeed!')
@@ -50,15 +50,14 @@ export const router = (customFetch = null, base = '/') => {
             req.session = null;
         }
 
-        res.redirect(base || '/');
+        res.redirect(req.base || '/');
     });
 
     return router;
 };
 
-async function getAccessToken({code}, customFetch = null) {
-    const fetchFunction = customFetch ? customFetch : fetch
-    const request = await fetchFunction('https://github.com/login/oauth/access_token', {
+async function getAccessToken({code}, fetch) {
+    const request = await fetch('https://github.com/login/oauth/access_token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -76,8 +75,13 @@ async function getAccessToken({code}, customFetch = null) {
     return params.get("access_token");
 }
 
-export async function fetchGitHubUser(accessToken, customFetch = null) {
-    const octokit = new Octokit({auth: accessToken, ...(customFetch ? {request: {fetch: customFetch}} : {})})
+export async function fetchGitHubUser(accessToken, fetch) {
+    const octokit = new Octokit({
+        auth: accessToken,
+        request: {
+            fetch: fetch
+        },
+    });
 
     const {data} = await octokit.request('GET /user');
 

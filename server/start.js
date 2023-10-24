@@ -17,7 +17,7 @@ const {
 
 const app = express();
 
-if(EXPRESS_STATIC) {
+if (EXPRESS_STATIC) {
     app.use(BASE + '/static', express.static(path.join(__dirname, '../client/build')))
 }
 

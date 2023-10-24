@@ -2,3 +2,5 @@
 /client/webpack
 /client/babel.config.cjs
 /client/webpack.config.ts
+/proxy
+/scripts

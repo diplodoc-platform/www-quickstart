@@ -19,7 +19,7 @@ const nodekit = new NodeKit({
 
 const DEFAULT_URLS = { api: '/api', auth: '/auth' };
 
-export const router = ({navigation, urls = {}, base = '/', staticBase = '/static', customFetch = null} = {}) => {
+export const router = ({navigation, urls = {}, base = '/', staticBase = '/static', customFetch = fetch} = {}) => {
     urls = {...DEFAULT_URLS, ...urls, base};
 
     const router = new Router();
@@ -33,14 +33,16 @@ export const router = ({navigation, urls = {}, base = '/', staticBase = '/static
     }));
 
     router.use((req, res, next) => {
+        req.base = base;
+        req.fetch = customFetch;
         req.ctx = res.ctx = nodekit.ctx.create(req.url);
         withModels(req, res);
         next();
     });
 
-    router.get('/', root({urls, navigation, staticBase, customFetch}));
-    router.use(urls.api || '/api', api(customFetch));
-    router.use(urls.auth || '/auth', auth(customFetch, base));
+    router.get('/', root({urls, navigation, staticBase}));
+    router.use(urls.api, api());
+    router.use(urls.auth, auth());
 
     return router;
 };

@@ -10,18 +10,18 @@ import {expectEnv} from "../../utils/envconfig.js";
 
 const csrfSecret = expectEnv('CSRF_SECRET')();
 
-export const router = ({navigation, urls, staticBase, customFetch = null}) => {
+export const router = ({navigation, urls, staticBase}) => {
     const router = new Router();
 
     router.use(csp(staticBase));
-    router.use(auth(customFetch, {safe: true}));
-    router.use(csrf(JSON.parse(csrfSecret), {renew: true}));
+    router.use(auth({safe: true}));
+    router.use(csrf(csrfSecret.keys, {renew: true}));
 
     router.get('/', async (req, res) => {
         const bootstrap = manifest(staticBase || '/static');
 
         const state = {
-            ...config(req, customFetch),
+            ...config(req),
             manifest: bootstrap,
             urls,
             navigation,

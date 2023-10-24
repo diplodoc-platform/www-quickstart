@@ -6,8 +6,6 @@ export const handle = async (req, res) => {
     const ACTIONS = Actions(config(req)).default;
     const Action = ACTIONS[action];
 
-    console.log('ACTION', action, Action);
-
     if (!Action) {
         res.status(405);
         res.send({

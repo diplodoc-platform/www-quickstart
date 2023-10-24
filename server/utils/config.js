@@ -24,7 +24,7 @@ const commonBucket = envconfig({
     }
 })
 
-export default (req, customFetch = null) => ({
+export default (req) => ({
     api: {
         request: req.ctx.request.bind(req.ctx)
     },
@@ -38,9 +38,9 @@ export default (req, customFetch = null) => ({
         sign: req.csrf
     },
     server: {
+        fetch: req.fetch,
         ...req.session,
         ...ENV,
         ...commonBucket,
-        ...(customFetch ? {fetch: customFetch} : {})
     }
 });

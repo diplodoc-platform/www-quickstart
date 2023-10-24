@@ -8,7 +8,7 @@ export class AuthError extends Error {
     }
 }
 
-export function auth(customFetch, {safe} = {}) {
+export function auth({safe} = {}) {
     return async function (req, res, next) {
         try {
             const {accessToken} = req.session || {};
@@ -17,7 +17,7 @@ export function auth(customFetch, {safe} = {}) {
                 throw new AuthError('Unauthorized');
             }
 
-            req.auth = await fetchGitHubUser(accessToken, customFetch);
+            req.auth = await fetchGitHubUser(accessToken, req.fetch);
         } catch (error) {
             if (!safe) {
                 next(new AuthError(error?.message));
