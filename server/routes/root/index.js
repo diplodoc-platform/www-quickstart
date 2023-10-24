@@ -15,7 +15,7 @@ export const router = ({navigation, urls, staticBase, customFetch = null}) => {
 
     router.use(csp(staticBase));
     router.use(auth(customFetch, {safe: true}));
-    router.use(csrf(csrfSecret.keys, {renew: true}));
+    router.use(csrf(JSON.parse(csrfSecret), {renew: true}));
 
     router.get('/', async (req, res) => {
         const bootstrap = manifest(staticBase || '/static');
