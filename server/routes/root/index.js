@@ -17,7 +17,8 @@ export const router = ({navigation, urls, staticBase, customFetch = null}) => {
             ...config(req, customFetch),
             manifest: bootstrap,
             urls,
-            navigation
+            navigation,
+            lang: req.lang || 'ru',
         };
 
         const {pipe} = cabinet(state).render({
