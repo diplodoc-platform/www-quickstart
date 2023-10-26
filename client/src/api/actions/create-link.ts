@@ -43,7 +43,8 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
 
     if (creds.secretAccessKey) {
         await Promise.all([
-            ctx.request(SASaveSecret, { name: saName, credentials: creds }),
+            // Temporary dont save SA secret
+            // ctx.request(SASaveSecret, { name: saName, credentials: creds }),
             ctx.request(GHSaveSecret, {
                 owner, repo, secrets: [
                     { name: 'DIPLODOC_ACCESS_KEY_ID', value: creds.accessKeyId },
