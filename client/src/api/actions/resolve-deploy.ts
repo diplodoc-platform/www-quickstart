@@ -1,6 +1,7 @@
 import type { ModelContext } from '../../types';
 import { Deploy } from '../models/deploy';
 import { Octokit } from '../models/services/octokit';
+import {retrier} from "../../utils/common";
 
 type Props = {
     owner: string;
@@ -19,7 +20,7 @@ export async function ResolveDeploy({ owner, repo }: Props, ctx: ModelContext) {
             ref: 'main',
         });
 
-        return ctx.request(Deploy, { owner, repo, nocache: Date.now() });
+        return await retrier(async () => await ctx.request(Deploy, { owner, repo, nocache: Date.now() }), {attempts: 5, delay: 1000});
     }
 
     return deploy;
