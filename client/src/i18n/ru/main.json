@@ -6,5 +6,10 @@
   "repository": "Репозиторий на GitHub",
   "project": "Проект в Diplodoc",
   "project-created": "Будет создан проект",
-  "create": "Создать"
+  "create": "Создать",
+  "will-be-available": "проект будет доступен по",
+  "link": "ссылке",
+  "after-finishing": "После завершения",
+  "release": "релиза",
+  "available-at": "Доступен по"
 }

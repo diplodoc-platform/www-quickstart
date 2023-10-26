@@ -6,5 +6,10 @@
   "repository": "Github repository",
   "project": "Diplodoc project",
   "project-created": "Project will be created",
-  "create": "Create"
+  "create": "Create",
+  "will-be-available": "project will be available via this",
+  "link": "link",
+  "after-finishing": "After finishing",
+  "release": "release",
+  "available-at": "Available via"
 }
