@@ -58,7 +58,8 @@ const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project 
                     onClick={ onClick }>
                 { i18nK(`create`) }
             </Button>
-            <Progress className={ cs.progress_bar } text={ i18nK(`loading`) } theme="success" size={'s'} value={progress} loading={loading} />
+            {loading && <Progress className={cs.progress_bar} text={i18nK(`loading`)} theme="success" size={'s'} value={progress}
+                       loading={loading}/>}
         </div>
     );
 });
