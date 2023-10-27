@@ -1,6 +1,6 @@
 import type { IStrategy } from '@modelsjs/resolver';
 
-export const RequestStrategy = Symbol('ServerResolveStrategy');
+export const RequestStrategy = Symbol('RequestResolveStrategy');
 
 export interface IRequestStrategy extends IStrategy {
     alias: string;

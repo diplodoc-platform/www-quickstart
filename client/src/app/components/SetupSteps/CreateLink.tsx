@@ -73,7 +73,7 @@ export const CreateLink = memo(() => {
     }, true);
 
     if (error) {
-        return error.message;
+        console.error(error.message);
     }
 
     if (!project.id) {
