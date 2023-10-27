@@ -1,15 +1,16 @@
 {
-  "quickstart": "Quickstart",
-  "login": "Login with",
-  "auth": "Authorization",
-  "github-auth": "Login with GitHub",
-  "repository": "Github repository",
-  "project": "Diplodoc project",
-  "project-created": "Project will be created",
-  "create": "Create",
-  "will-be-available": "project will be available via this",
+  "quickstart": "Quickstart ",
+  "login": "Login with ",
+  "auth": "Authorization ",
+  "github-auth": "Login with GitHub ",
+  "repository": "Github repository ",
+  "project": "Diplodoc project ",
+  "project-created": "Project will be created ",
+  "create": "Create ",
+  "will-be-available": "project will be available via this ",
   "link": "link",
-  "after-finishing": "After finishing",
-  "release": "release",
-  "available-at": "Available via"
+  "after-finishing": "After finishing ",
+  "release": "release ",
+  "available-at": "Available via ",
+  "loading": "Loading"
 }
