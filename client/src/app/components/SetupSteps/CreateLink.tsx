@@ -3,7 +3,7 @@ import { useModel } from '@modelsjs/react';
 import { Repo } from '~/models/repo';
 import { Project } from '~/models/project';
 import { ModelError, set } from '@modelsjs/model';
-import { Button, Link } from '@gravity-ui/uikit';
+import { Button, Link, Progress } from '@gravity-ui/uikit';
 
 import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
@@ -15,9 +15,11 @@ const i18nK = i18n('main');
 
 const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project }) => {
     const [ loading, setLoading ] = useState(false);
+    const [ progress, setProgress ] = useState(0);
 
     const onClick = useCallback(async () => {
         setLoading(true);
+        const interval = setInterval(() => setProgress((oldCount) => oldCount + 1), 200);
 
         const request = await fetch(base + api + '/actions/create-link', {
             method: 'post',
@@ -41,6 +43,7 @@ const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project 
             set(project, new ModelError(project, response.error));
         }
 
+        clearInterval(interval);
         setLoading(false);
     }, [ setLoading ]);
 
@@ -55,6 +58,7 @@ const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project 
                     onClick={ onClick }>
                 { i18nK(`create`) }
             </Button>
+            <Progress className={ cs.progress_bar } text={ i18nK(`loading`) } theme="success" size={'s'} value={progress} loading={loading} />
         </div>
     );
 });
