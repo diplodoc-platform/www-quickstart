@@ -1,9 +1,10 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import { useModel } from '@modelsjs/react';
 import { Repo } from '~/models/repo';
 import { Project } from '~/models/project';
 import { ModelError, set } from '@modelsjs/model';
-import { Button, Link, Progress } from '@gravity-ui/uikit';
+import { Button, Link, Progress, Modal, CopyToClipboard, CopyToClipboardStatus, Tooltip, Icon } from '@gravity-ui/uikit';
+import {Copy} from '@gravity-ui/icons';
 
 import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
@@ -12,6 +13,13 @@ import * as cs from './index.module.css';
 import i18n from '../../../i18n/configureLang';
 
 const i18nK = i18n('main');
+
+type AnchorButtonComponentProps = {
+    size?: number;
+    className?: string;
+    status: CopyToClipboardStatus;
+    qa?: string;
+};
 
 const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project }) => {
     const [ loading, setLoading ] = useState(false);
@@ -94,13 +102,50 @@ export const CreateLink = memo(() => {
                 <Link className={ cs.project_link } href={ project.link } target="_blank">
                     {i18nK('link')}
                 </Link>.
+                {project.creds && <SecretsModal data={project.creds}/>}
             </div>
         );
     } else {
         return (
             <div className={ cs.project }>
                 {i18nK('available-at')} <Link className={ cs.project_link } href={ project.link } target="_blank">{i18nK('link')}</Link>
+                {project.creds && <SecretsModal data={project.creds}/>}
             </div>
         );
     }
 });
+
+const AnchorButtonComponent = ({size = 15, className, status, onClick, qa}: AnchorButtonComponentProps) => {
+    const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+
+    return (
+        <Tooltip content={status === CopyToClipboardStatus.Success ? 'Copied!' : 'Copy'}>
+            <Button ref={buttonRef} view="flat" className={className} onClick={onClick} qa={qa}>
+                <Icon size={size} data={Copy} />
+            </Button>
+        </Tooltip>
+    );
+};
+
+const SecretsModal = ({data: {accessKeyId, secretAccessKey}}) => {
+    const [ open, setOpen ] = useState(Boolean(accessKeyId));
+
+    return (<Modal open={open} onClose={() => setOpen(false)} contentClassName={cs.modal}>
+        <span>Идентификатор ключа:</span>
+        <div>
+            {accessKeyId}
+            <CopyToClipboard text={accessKeyId} timeout={500}>
+                {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
+            </CopyToClipboard>
+        </div>
+        <span>Ваш секретный ключ:</span>
+        <div>
+            {secretAccessKey}
+            <CopyToClipboard text={secretAccessKey} timeout={500}>
+                {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
+            </CopyToClipboard>
+        </div>
+        <br/>
+        <span>Сохраните идентификатор и ключ. После закрытия диалога значение ключа будет недоступно. Ключ будет добавлен в созданный репозиторий автоматически.</span>
+    </Modal>)
+}

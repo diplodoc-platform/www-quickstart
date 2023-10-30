@@ -12,4 +12,9 @@ export class Project extends Model<{ id: string, repo: string, owner: string }> 
     link?: string;
 
     deploy?: string;
+
+    creds?: {
+        accessKeyId: string;
+        secretAccessKey: string;
+    };
 }

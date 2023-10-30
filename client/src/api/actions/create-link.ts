@@ -71,6 +71,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
         name: prefix,
         link: `https://${commonBucketName}---${prefix}.viewer.diplodoc.com`,
         deploy,
+        creds,
     };
 }
 

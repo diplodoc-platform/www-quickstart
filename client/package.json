@@ -59,6 +59,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.431.0",
     "@gravity-ui/i18n": "^1.1.0",
+    "@gravity-ui/icons": "^2.6.0",
     "@yandex-cloud/nodejs-sdk": "2.4",
     "js-yaml": "^4.1.0",
     "libsodium-wrappers": "^0.7.13",
