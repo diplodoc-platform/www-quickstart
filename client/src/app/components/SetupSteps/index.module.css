@@ -131,3 +131,8 @@ div.progress_bar {
     width: 500px;
     padding: 20px;
 }
+
+.key_text {
+    display: block;
+    margin-top: 15px;
+}

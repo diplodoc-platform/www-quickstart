@@ -119,7 +119,7 @@ const AnchorButtonComponent = ({size = 15, className, status, onClick, qa}: Anch
     const buttonRef = React.useRef<HTMLButtonElement | null>(null);
 
     return (
-        <Tooltip content={status === CopyToClipboardStatus.Success ? 'Copied!' : 'Copy'}>
+        <Tooltip content={status === CopyToClipboardStatus.Success ? i18nK('copied') : i18nK('copy')}>
             <Button ref={buttonRef} view="flat" className={className} onClick={onClick} qa={qa}>
                 <Icon size={size} data={Copy} />
             </Button>
@@ -131,21 +131,21 @@ const SecretsModal = ({data: {accessKeyId, secretAccessKey}}) => {
     const [ open, setOpen ] = useState(Boolean(accessKeyId));
 
     return (<Modal open={open} onClose={() => setOpen(false)} contentClassName={cs.modal}>
-        <span>Идентификатор ключа:</span>
+        <span>{i18nK('key-title')}</span>
+        <span className={cs.key_text}>{i18nK('key-id')}:</span>
         <div>
             {accessKeyId}
             <CopyToClipboard text={accessKeyId} timeout={500}>
                 {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
             </CopyToClipboard>
         </div>
-        <span>Ваш секретный ключ:</span>
+        <span>{i18nK('secret-key')}:</span>
         <div>
             {secretAccessKey}
             <CopyToClipboard text={secretAccessKey} timeout={500}>
                 {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
             </CopyToClipboard>
         </div>
-        <br/>
-        <span>Сохраните идентификатор и ключ. После закрытия диалога значение ключа будет недоступно. Ключ будет добавлен в созданный репозиторий автоматически.</span>
+        <span className={cs.key_text}>{i18nK('key-description')}</span>
     </Modal>)
 }

@@ -12,5 +12,11 @@
   "after-finishing": "After finishing ",
   "release": "release ",
   "available-at": "Available via ",
-  "loading": "Loading"
+  "loading": "Loading",
+  "key-id": "Key ID",
+  "secret-key": "Secret key",
+  "key-description": "Save the ID and key. After closing the dialog, the key value will not be available. The key will be added to the created repository automatically.",
+  "copy": "Copy",
+  "copied": "Copied",
+  "key-title": "Keys to the documentation directory in S3."
 }
