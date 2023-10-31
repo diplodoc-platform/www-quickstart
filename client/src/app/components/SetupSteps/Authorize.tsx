@@ -15,7 +15,7 @@ export const Authorize = memo(() => {
         return (
             <div className={ cs.step_body }>
                 <span className={ cs.step_text }>{ i18nK(`auth`) }</span>
-                <Link title={ i18nK(`github-auth`) } href={ base + auth + '/login/github' }>
+                <Link className={cs.auth_init_link} title={ i18nK(`github-auth`) } href={ base + auth + '/login/github' }>
                     <Button className={ cs.auth_button } size={ 'l' } view={ 'action' }>
                         <Button.Icon>
                             <Icon data={ GithubIcon } width={ '30px' } height={ '30px' }/>
