@@ -35,6 +35,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
     const { id: saId } = await ctx.request(ResolveAccount, { name: saName });
 
     const prefix = `gh-${ saId }`;
+    const link = `https://${commonBucketName}---${prefix}.viewer.diplodoc.com`;
 
     const [ head, creds ] = await Promise.all([
         ctx.request(Head, { bucket: commonBucket, prefix, nullable: true }),
@@ -56,6 +57,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
                     { name: 'DIPLODOC_STORAGE_BUCKET', value: commonBucketName + '/' + prefix },
                     { name: 'DIPLODOC_STORAGE_REGION', value: s3config.region },
                     { name: 'DIPLODOC_STORAGE_ENDPOINT', value: s3config.endpoint },
+                    { name: 'DIPLODOC_PROJECT_LINK', value: link },
                 ]
             }),
         ]);
@@ -69,7 +71,7 @@ export async function CreateLink({ owner, repo }: Props, ctx: ModelContext) {
     return {
         id: saId,
         name: prefix,
-        link: `https://${commonBucketName}---${prefix}.viewer.diplodoc.com`,
+        link,
         deploy,
         creds,
     };
