@@ -178,7 +178,7 @@ const config = ({ isServer, isDev = false }: Env) => {
             runtimeChunk: 'single',
             splitChunks: {
                 chunks: 'all',
-                maxSize: 500000
+                maxSize: 2000000
             }
         },
         ...(!isServer ? {
