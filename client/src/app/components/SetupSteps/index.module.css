@@ -1,6 +1,6 @@
 .root {
-    /*width: 100vw;*/
-    height: calc(100vh - var(--pc-first-block-indent, 96px));
+    /*48px from .pc-block-base.pc-block-base padding*/
+    height: calc(100vh - var(--header-height) - 48px);
     display: flex;
     justify-content: center;
     align-items: start;
