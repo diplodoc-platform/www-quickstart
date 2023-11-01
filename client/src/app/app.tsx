@@ -14,6 +14,7 @@ import * as urls from '~/configs/urls';
 import { resolvers } from './resolvers';
 import { Transferable } from './components/Transferable';
 import { configureLang, i18n } from '../i18n/configureLang';
+import Favicon from "./components/Favicon";
 
 
 export const App = memo(() => {
@@ -26,6 +27,7 @@ export const App = memo(() => {
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>Diplodoc quickstart</title>
+            <Favicon assetsPath={urls.assetsPath} />
             <Transferable id="config-env" data={ stringify({ ...env, isServer: true }) }/>
             <Transferable id="config-manifest" data={ stringify(manifest) }/>
             <Transferable id="config-navigation" data={ stringify(navigation) }/>
