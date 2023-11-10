@@ -11,6 +11,12 @@ import { SetupSteps } from '../SetupSteps';
 import { Repo } from '~/models/repo';
 import { Project } from '~/models/project';
 import { Navigation } from '~/models/navigation';
+import {useAnalytics} from "../../hooks/useAnalytics";
+import {ConsentPopup} from "../ConsentPopup";
+import * as common from "~/configs/common";
+
+
+import {GTMBody} from "../Gtm/GTMBody";
 
 export const Setup = () => {
     const { theme } = useModel(Settings, {});
@@ -22,29 +28,43 @@ export const Setup = () => {
         owner: repo.owner,
     }, true);
 
+    const {consentValue, hasConsent, updateConsent, analyticsRef} = useAnalytics({},
+        common.gtmId || '',
+    );
+
     return (
-        <MobileProvider mobile={ isMobile } platform={ Platform.BROWSER }>
-            <ThemeProvider theme={ theme }>
-                <PageConstructorProvider ssrConfig={ { isServer } }>
-                    <PageConstructor
-                        custom={ {
-                            blocks: {
-                                'steps': SetupSteps
-                            }
-                        } }
-                        content={ {
-                            blocks: [
-                                {
-                                    type: 'steps',
-                                    repo: repoError ? null : repo,
-                                    link: linkError ? null : link,
-                                },
-                            ]
-                        } as PageContent }
-                        navigation={ navigation }
-                    />
-                </PageConstructorProvider>
-            </ThemeProvider>
-        </MobileProvider>
+        <>
+            {navigation?.analytics && <GTMBody id={common.gtmId} />}
+            <MobileProvider mobile={ isMobile } platform={ Platform.BROWSER }>
+                <ThemeProvider theme={ theme }>
+                    <PageConstructorProvider ssrConfig={ { isServer } }>
+                        <PageConstructor
+                            custom={ {
+                                blocks: {
+                                    'steps': SetupSteps
+                                }
+                            } }
+                            content={ {
+                                blocks: [
+                                    {
+                                        type: 'steps',
+                                        repo: repoError ? null : repo,
+                                        link: linkError ? null : link,
+                                    },
+                                ]
+                            } as PageContent }
+                            navigation={ navigation }
+                        />
+                    </PageConstructorProvider>
+                </ThemeProvider>
+            </MobileProvider>
+            {consentValue !== undefined && !hasConsent && navigation.analytics && (
+                <ConsentPopup
+                    {...navigation?.analytics.popup}
+                    onAction={updateConsent}
+                    containerRef={analyticsRef}
+                />
+            )}
+        </>
     );
 };

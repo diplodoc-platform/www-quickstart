@@ -3,7 +3,7 @@ import {Server} from '~/resolvers/strategy';
 import {Settings as Base} from './settings';
 
 const action = () => ({
-    theme: 'dark',
+    theme: 'light',
 });
 
 action.displayName = 'settings';

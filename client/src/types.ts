@@ -1,4 +1,5 @@
 import type { Endpoints, OctokitResponse } from '@octokit/types';
+import {ButtonProps} from "@gravity-ui/page-constructor";
 
 export type GHResponse<R extends keyof Endpoints> = Endpoints[R]['response'] extends OctokitResponse<infer T> ? T : OJSON;
 export type GHError = {
@@ -19,4 +20,21 @@ export type ModelContext = {
         warn: Function;
         log: Function;
     };
+}
+
+export type ConsentButtonsPopupProps = Record<'decline' | 'accept', ButtonProps>;
+
+export interface ConsentPopupData {
+    text: string;
+    buttons: ConsentButtonsPopupProps;
+}
+
+export enum AnalyticsConsentDecision {
+    granted = 'granted',
+    denied = 'denied',
+}
+
+export interface AnalyticsData {
+    id: string;
+    popup: ConsentPopupData;
 }
