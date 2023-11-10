@@ -33,6 +33,10 @@ export default (req) => ({
         isMobile: true,
         lang: req.lang || 'ru',
     },
+    common: {
+        gtmId: process.env.GTM_ID,
+        nonce: req.nonce,
+    },
     user: {
         ...req.auth,
         sign: req.csrf

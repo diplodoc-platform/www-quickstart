@@ -26,10 +26,11 @@ export const router = ({navigation, urls, staticBase}) => {
             urls,
             navigation,
             lang: req.lang || 'ru',
+            nonce: req.nonce,
         };
 
         const {pipe} = cabinet(state).render({
-            url: req.url
+            url: req.url,
         }, {
             nonce: req.nonce,
             bootstrapScripts: bootstrap.scripts.map(el => urls.base + el),
@@ -42,7 +43,7 @@ export const router = ({navigation, urls, staticBase}) => {
 
                 res.statusCode = 500;
                 res.setHeader('content-type', 'text/html');
-                res.send('<h1>Something went wrong</h1>');
+                res.send(error.message);
             },
             onError(error) {
                 console.error(error);
