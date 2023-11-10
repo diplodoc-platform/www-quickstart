@@ -157,6 +157,14 @@ const config = ({ isServer, isDev = false }: Env) => {
                             scripts: []
                         });
                     return `module.exports = (${ Manifest.toString() })(${ JSON.stringify(data, null, 2) })`;
+                },
+                sort: (fileA) => {
+                    if (fileA.name.includes('app')) {
+                        return 1;
+                    } else if (!fileA.name.includes('app')) {
+                        return -1;
+                    }
+                    return 0;
                 }
             }),
             // new BundleAnalyzerPlugin({
