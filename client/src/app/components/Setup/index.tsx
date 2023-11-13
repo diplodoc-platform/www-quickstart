@@ -58,7 +58,7 @@ export const Setup = () => {
                     </PageConstructorProvider>
                 </ThemeProvider>
             </MobileProvider>
-            {consentValue !== undefined && !hasConsent && navigation.analytics && (
+            {consentValue !== undefined && !hasConsent && navigation.analytics && common.gtmId && (
                 <ConsentPopup
                     {...navigation?.analytics.popup}
                     onAction={updateConsent}
