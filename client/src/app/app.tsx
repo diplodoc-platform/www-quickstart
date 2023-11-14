@@ -10,6 +10,14 @@ import { resolvers } from './resolvers';
 import { configureLang, i18n } from '../i18n/configureLang';
 import {Head} from "./components/Head";
 
+function fallbackRender({ error }) {
+    return (
+        <div role="alert">
+            <p>Something went wrong:</p>
+            <pre style={{ color: "red" }}>{error.message}</pre>
+        </div>
+    );
+}
 
 export const App = memo(({nonce}) => {
     configureLang(env.lang || 'ru')
@@ -19,7 +27,7 @@ export const App = memo(({nonce}) => {
         <html>
         <Head nonce={nonce}/>
         <body>
-        <ErrorBoundary fallback={ <div>'Error...'</div> }>
+        <ErrorBoundary fallbackRender={fallbackRender}>
             <Resolver fallback={ <div></div> } resolvers={ resolvers }>
                 <Setup/>
                 <Wait>

@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {AnalyticsConsentDecision, AnalyticsData} from "../../../types";
-import {useAnalytics} from "../../hooks/useAnalytics";
-import * as common from "~/configs/common";
 
 type GTMHeadPropsType = {
     id: AnalyticsData['id'];
@@ -18,16 +16,14 @@ const LOCAL_STORAGE_CONSENT_KEY = 'hasAnalyticsConsent';
  * @returns - jsx
  */
 export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
+    useEffect(() => {
+        const gtmScript = document.createElement('script')
 
-    const {consentValue} = useAnalytics({},
-        id|| '',
-    );
+        if(nonce){
+            gtmScript.setAttribute("nonce", nonce)
+        }
 
-    return consentValue !== undefined && id ? (
-        <script
-            nonce={nonce}
-            dangerouslySetInnerHTML={{
-                __html: `
+        gtmScript.innerHTML = `
                 // Define dataLayer and the gtag function.
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
@@ -54,8 +50,12 @@ export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
                 }
 
                 loadGtm(window, document, 'script', 'dataLayer', '${id}')
-            `,
-            }}
-        />
-    ) : null;
+            `
+
+        document.head.appendChild(gtmScript)
+
+        return () => {
+            document.head.removeChild(gtmScript)
+        }
+    }, [])
 };
