@@ -15,7 +15,7 @@ html, body {
 }
 
 .pc-content-wrapper__icon {
-    width: 36px !important;
-    height: 36px !important;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
 }
