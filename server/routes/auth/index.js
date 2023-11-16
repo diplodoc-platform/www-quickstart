@@ -1,4 +1,6 @@
 import {Router} from 'express';
+import { join } from 'node:path';
+import {randomBytes} from 'crypto';
 import {Octokit} from 'octokit';
 import envConfig, {expectEnv} from '../../utils/envconfig.js';
 
@@ -17,14 +19,27 @@ const AUTH_SCOPES = ['public_repo'].join(',');
 
 export const router = () => {
     const router = new Router();
+    const githubState = new Map()
 
     router.get('/login/github', (req, res) => {
-        res.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${AUTH_SCOPES}`)
+        const state = randomBytes(20).toString('hex');
+        const lang = req.get('Referrer')?.split('/')?.includes('en') ? 'en' : '';
+        githubState.set(state, lang)
+
+        res.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${AUTH_SCOPES}&state=${state}`)
     });
 
     router.get('/login/github/callback', async (req, res) => {
         let accessToken;
         let user;
+        const state = req.query?.state;
+
+        if(!state || !githubState.has(state)) {
+            res.status(403);
+            res.send('Could not get github state back');
+            return;
+        }
+
         try {
             accessToken = await getAccessToken(req.query, req.fetch);
             user = await fetchGitHubUser(accessToken, req.fetch);
@@ -38,7 +53,7 @@ export const router = () => {
             req.session.accessToken = accessToken;
             req.session.githubId = user.id;
 
-            res.redirect(req.base || '/');
+            res.redirect(join('/', githubState.get(state), req.base || ''));
         } else {
             res.status(403);
             res.send('Login did not succeed!')
