@@ -14,13 +14,14 @@ import { Navigation } from '~/models/navigation';
 import {useAnalytics} from "../../hooks/useAnalytics";
 import {ConsentPopup} from "../ConsentPopup";
 import * as common from "~/configs/common";
+import * as env from '~/configs/env';
 
 
 import {GTMBody} from "../Gtm/GTMBody";
 
 export const Setup = () => {
     const { theme } = useModel(Settings, {});
-    const [ navigation ] = useModel(Navigation, true);
+    const [ navigation ] = useModel(Navigation, {lang: env.lang}, true);
     const [ repo, repoError ] = useModel(Repo, { repo: 'diplodoc-example' }, true);
     const [ link, linkError ] = useModel(Project, {
         id: repo.id,
