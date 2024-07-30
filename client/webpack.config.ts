@@ -95,21 +95,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                 resolve: {
                     fullySpecified: false,
                 },
-                use: [ {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            !isDev && '@babel/env',
-                            '@babel/react',
-                            '@babel/typescript'
-                        ].filter(Boolean),
-                        plugins: [
-                            [ '@babel/plugin-proposal-decorators', {
-                                decoratorsBeforeExport: true
-                            } ]
-                        ]
-                    }
-                } ],
+                use: 'babel-loader',
                 exclude: /node_modules\/(?!@modelsjs)/
             }, {
                 test: /\.css$/,
