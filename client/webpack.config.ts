@@ -17,6 +17,7 @@ type Env = {
 
 const {
     NODE_ENV,
+    HMR_ENDPOINT,
 } = process.env;
 const isDev = NODE_ENV === 'development';
 
@@ -77,7 +78,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                 '~/models': resolve(__dirname, './src/models'),
                 '~/resolvers': resolve(__dirname, './src/resolvers'),
                 '~/configs': resolve(__dirname, './src/configs'),
-                '~@doc-tools/transform/dist/css/yfm.css': require.resolve('@doc-tools/transform/dist/css/yfm.css'),
+                // '~@doc-tools/transform/dist/css/yfm.css': require.resolve('@doc-tools/transform/dist/css/yfm.css'),
             },
             fallback: isServer ? {} : {
                 'stream': false,
@@ -98,10 +99,10 @@ const config = ({ isServer, isDev = false }: Env) => {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            '@babel/env',
+                            !isDev && '@babel/env',
                             '@babel/react',
                             '@babel/typescript'
-                        ],
+                        ].filter(Boolean),
                         plugins: [
                             [ '@babel/plugin-proposal-decorators', {
                                 decoratorsBeforeExport: true
@@ -195,7 +196,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                 port: 3001,
                 client: {
                     overlay: false,
-                    webSocketURL: 'wss://localhost:3001/static/ws',
+                    webSocketURL: HMR_ENDPOINT || `wss://localhost/static/ws`,
                 },
                 devMiddleware: {
                     writeToDisk: (path) => path.startsWith(server) && !path.includes('.hot-update.js')
@@ -222,7 +223,3 @@ export default [
     config({ isDev, isServer: true }),
     config({ isDev, isServer: false }),
 ];
-
-// gh-708549746
-// gh-ajelppm5ui5aumasnghl
-// common-stable--gh-708549746-sa

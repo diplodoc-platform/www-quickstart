@@ -1,10 +1,10 @@
-import Models from '@diplodoc/cabinet/models';
+import registry from '../../../registry.js';
 import config from '../../../utils/config.js';
 
 export const handle = async (req, res) => {
     const models = req.body.models;
     const result = {};
-    const MODELS = Models(config(req)).default;
+    const MODELS = registry.Models(config(req)).default;
 
     await Promise.all(Object.keys(models).map(async (key) => {
         const [alias] = key.split('?');

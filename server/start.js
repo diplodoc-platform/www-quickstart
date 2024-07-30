@@ -21,10 +21,12 @@ if (EXPRESS_STATIC) {
     app.use(BASE + '/static', express.static(path.join(__dirname, '../client/build')))
 }
 
-app.use('/:lang*?' + BASE, (req, res, next) => {
-    req.lang = req.params.lang;
-    next();
-}, quickstart({navigation, base: BASE}));
+// app.use('/:lang*?' + BASE, (req, res, next) => {
+//     req.lang = req.params.lang;
+//     next();
+// }, quickstart({navigation, base: BASE}));
+
+app.use(quickstart({navigation, base: BASE}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);

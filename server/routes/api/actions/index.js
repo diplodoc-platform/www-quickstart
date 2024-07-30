@@ -1,9 +1,9 @@
-import Actions from '@diplodoc/cabinet/actions';
+import registry from '../../../registry.js';
 import config from "../../../utils/config.js";
 
 export const handle = async (req, res) => {
     const {action} = req.params;
-    const ACTIONS = Actions(config(req)).default;
+    const ACTIONS = registry.Actions(config(req)).default;
     const Action = ACTIONS[action];
 
     if (!Action) {

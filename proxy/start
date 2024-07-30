@@ -24,7 +24,8 @@ if [[ -z "$BUILD_PORT" ]]; then
 fi
 
 function clean {
-  rm crt-domain.pem haproxy.cfg
+# rm crt-domain.pem haproxy.cfg
+  rm haproxy.cfg
 }
 trap clean EXIT
 

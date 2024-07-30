@@ -1,7 +1,6 @@
 import {Router} from 'express';
-import cabinet from '@diplodoc/cabinet';
-import manifest from '@diplodoc/cabinet/manifest';
 
+import registry from '../../registry.js';
 import config from '../../utils/config.js';
 import {csp} from '../../middlewares/csp.js';
 import {auth} from "../../middlewares/auth.js";
@@ -18,7 +17,8 @@ export const router = ({navigation, urls, staticBase}) => {
     router.use(csrf(csrfSecret.keys, {renew: true}));
 
     router.get('/', async (req, res) => {
-        const bootstrap = manifest(staticBase || '/static');
+        const {Cabinet, Manifest} = registry;
+        const bootstrap = Manifest(staticBase || '/static');
 
         const state = {
             ...config(req),
@@ -29,7 +29,7 @@ export const router = ({navigation, urls, staticBase}) => {
             nonce: req.nonce,
         };
 
-        const {pipe} = cabinet(state).render({
+        const {pipe} = Cabinet(state).render({
             url: req.url,
         }, {
             nonce: req.nonce,
