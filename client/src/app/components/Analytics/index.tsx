@@ -2,7 +2,7 @@ import React from 'react';
 import { useModel } from '@modelsjs/react';
 
 import { Navigation } from '~/models/navigation';
-import { useAnalytics } from '../../hooks/useAnalytics';
+import { useAnalytics } from './useAnalytics';
 import { ConsentPopup } from './ConsentPopup';
 import { GTMBody } from './GTMBody';
 import { GTMHead } from './GTMHead';
