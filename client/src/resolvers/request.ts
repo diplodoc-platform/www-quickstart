@@ -35,7 +35,7 @@ export const Request: TResolver = {
 
             if (!requests[key]) {
                 requests[key] = new Defer();
-                requests[key].promise.then(
+                requests[key].promise = requests[key].promise.then(
                     (result) => set(model, result),
                     (error) => set(model, new ModelError(model, error))
                 );
@@ -50,7 +50,7 @@ export const Request: TResolver = {
             const {alias} = model[RequestStrategy];
             const key = sign(alias, model);
 
-            return requests[key];
+            return requests[key].promise;
         }));
 
         return [ models ];
@@ -62,17 +62,40 @@ async function request(models: Record<string, OJSON>) {
         return;
     }
 
-    const request = await fetch(base + api + '/models', {
-        method: 'post',
-        body: JSON.stringify({models}),
-        headers: {
-            'content-type': 'application/json',
-            'x-user-id': user.id,
-            'x-csrf-token': user.sign,
-        },
-    });
+    let response;
+    try {
+        const request = await fetch(base + api + '/models', {
+            method: 'post',
+            body: JSON.stringify({models}),
+            headers: {
+                'content-type': 'application/json',
+                'x-user-id': user.id,
+                'x-csrf-token': user.sign,
+            },
+        });
 
-    const response = await request.json();
+        if (!request.ok) {
+            try {
+                response = await request.json();
+            } catch (error) {
+                response = {
+                    error: {
+                        message: request.statusText,
+                        code: 'UNHANDLED_REQUEST_ERROR',
+                    },
+                };;
+            }
+        } else {
+            response = await request.json();
+        }
+    } catch (error) {
+        response = {
+            error: {
+                message: error.message,
+                code: 'UNHANDLED_REQUEST_ERROR',
+            },
+        };
+    }
 
     // TODO: handle csrf renew
 

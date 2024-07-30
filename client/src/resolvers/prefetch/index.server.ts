@@ -14,13 +14,13 @@ export const Prefetch: TResolver = {
         const prefetch = construct(PrefetchModel);
 
         models.forEach((model) => {
-            const { alias } = model[PrefetchStrategy];
+            const { alias, error } = model[PrefetchStrategy];
             const key = sign(alias, model);
 
             once(model, 'state', (state) => {
                 if (state === ModelState.Ready) {
                     prefetch.add(key, stringify({ data: model }));
-                } else if (state === ModelState.Error) {
+                } else if (state === ModelState.Error && error) {
                     const error = getError(model) as ModelError;
 
                     prefetch.add(key, stringify({
@@ -32,7 +32,5 @@ export const Prefetch: TResolver = {
                 }
             });
         });
-
-        return [ [], models ];
     },
 };

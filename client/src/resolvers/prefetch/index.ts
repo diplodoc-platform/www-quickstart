@@ -4,7 +4,6 @@ import { Prefetch as PrefetchModel } from '~/models/prefetch';
 import { IPrefetchStrategyImpl, PrefetchStrategy } from '../strategy';
 import { set, construct, ModelError } from '@modelsjs/model';
 import { sign, parse } from '~/utils';
-import { split, isResolved } from '@modelsjs/resolver';
 
 export const Prefetch: TResolver = {
     get strategy() {
@@ -33,7 +32,5 @@ export const Prefetch: TResolver = {
                 set(model, error ? new ModelError(model, error) : data);
             }
         });
-
-        return split(models, isResolved);
     },
 };

@@ -1,12 +1,13 @@
-import {resolvable} from '@modelsjs/resolver';
-import {Server} from '~/resolvers/strategy';
-import {Settings as Base} from './settings';
+import { resolvable } from '@modelsjs/resolver';
+import { Server } from '~/resolvers/strategy';
+import { Settings as Base } from './settings';
 
-const action = () => ({
+const action = async () => ({
     theme: 'light',
 });
 
 action.displayName = 'settings';
 
 @resolvable(Server(action))
-export class Settings extends Base {}
+export class Settings extends Base {
+}
