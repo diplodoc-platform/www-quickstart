@@ -20,6 +20,7 @@
     "jsx": "react",
     "paths": {
       "~/utils": ["src/utils"],
+      "~/i18n": ["src/i18n"],
       "~/models/*": ["src/models/*"],
       "~/resolvers": ["src/resolvers/"],
       "~/resolvers/*": ["src/resolvers/*"],

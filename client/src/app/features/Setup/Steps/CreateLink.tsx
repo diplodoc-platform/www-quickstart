@@ -1,16 +1,25 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useModel } from '@modelsjs/react';
 import { Repo } from '~/models/repo';
 import { Project } from '~/models/project';
 import { ModelError, set } from '@modelsjs/model';
-import { Button, Link, Progress, Modal, CopyToClipboard, CopyToClipboardStatus, Tooltip, Icon } from '@gravity-ui/uikit';
-import {Copy} from '@gravity-ui/icons';
+import {
+    Button,
+    Link,
+    Progress,
+    Modal,
+    CopyToClipboard,
+    CopyToClipboardStatus,
+    Tooltip,
+    Icon
+} from '@gravity-ui/uikit';
+import { Copy } from '@gravity-ui/icons';
 
 import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
+import { i18n } from '~/i18n';
 
 import * as cs from './index.module.css';
-import i18n from '../../../i18n/configureLang';
 
 const i18nK = i18n('main');
 
@@ -66,8 +75,9 @@ const EmptyCreateLink = memo(({ repo, project }: { repo: Repo, project: Project 
                     onClick={ onClick }>
                 { i18nK(`create`) }
             </Button>
-            {loading && <Progress className={cs.progress_bar} text={i18nK(`loading`)} theme="success" size={'s'} value={progress}
-                       loading={loading}/>}
+            { loading && <Progress className={ cs.progress_bar } text={ i18nK(`loading`) } theme="success" size={ 's' }
+                                   value={ progress }
+                                   loading={ loading }/> }
         </div>
     );
 });
@@ -93,59 +103,60 @@ export const CreateLink = memo(() => {
     if (project.deploy) {
         return (
             <div className={ cs.project }>
-                {i18nK('after-finishing')}
+                { i18nK('after-finishing') }
                 <Link className={ cs.project_link } href={ project.deploy.link } target="_blank">
-                    {i18nK('release')}
+                    { i18nK('release') }
                 </Link>
                 <br/>
-                {i18nK('will-be-available')}
+                { i18nK('will-be-available') }
                 <Link className={ cs.project_link } href={ project.link } target="_blank">
-                    {i18nK('link')}
+                    { i18nK('link') }
                 </Link>.
-                {project.creds && <SecretsModal data={project.creds}/>}
+                { project.creds && <SecretsModal data={ project.creds }/> }
             </div>
         );
     } else {
         return (
             <div className={ cs.project }>
-                {i18nK('available-at')} <Link className={ cs.project_link } href={ project.link } target="_blank">{i18nK('link')}</Link>
-                {project.creds && <SecretsModal data={project.creds}/>}
+                { i18nK('available-at') } <Link className={ cs.project_link } href={ project.link }
+                                                target="_blank">{ i18nK('link') }</Link>
+                { project.creds && <SecretsModal data={ project.creds }/> }
             </div>
         );
     }
 });
 
-const AnchorButtonComponent = ({size = 15, className, status, onClick, qa}: AnchorButtonComponentProps) => {
+const AnchorButtonComponent = ({ size = 15, className, status, onClick, qa }: AnchorButtonComponentProps) => {
     const buttonRef = React.useRef<HTMLButtonElement | null>(null);
 
     return (
-        <Tooltip content={status === CopyToClipboardStatus.Success ? i18nK('copied') : i18nK('copy')}>
-            <Button ref={buttonRef} view="flat" className={className} onClick={onClick} qa={qa}>
-                <Icon size={size} data={Copy} />
+        <Tooltip content={ status === CopyToClipboardStatus.Success ? i18nK('copied') : i18nK('copy') }>
+            <Button ref={ buttonRef } view="flat" className={ className } onClick={ onClick } qa={ qa }>
+                <Icon size={ size } data={ Copy }/>
             </Button>
         </Tooltip>
     );
 };
 
-const SecretsModal = ({data: {accessKeyId, secretAccessKey}}) => {
+const SecretsModal = ({ data: { accessKeyId, secretAccessKey } }) => {
     const [ open, setOpen ] = useState(Boolean(accessKeyId));
 
-    return (<Modal open={open} onClose={() => setOpen(false)} contentClassName={cs.modal}>
-        <span>{i18nK('key-title')}</span>
-        <span className={cs.key_text}>{i18nK('key-id')}:</span>
+    return (<Modal open={ open } onClose={ () => setOpen(false) } contentClassName={ cs.modal }>
+        <span>{ i18nK('key-title') }</span>
+        <span className={ cs.key_text }>{ i18nK('key-id') }:</span>
         <div>
-            {accessKeyId}
-            <CopyToClipboard text={accessKeyId} timeout={500}>
-                {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
+            { accessKeyId }
+            <CopyToClipboard text={ accessKeyId } timeout={ 500 }>
+                { (status) => (<AnchorButtonComponent status={ status } qa="copy-button"/>) }
             </CopyToClipboard>
         </div>
-        <span>{i18nK('secret-key')}:</span>
+        <span>{ i18nK('secret-key') }:</span>
         <div>
-            {secretAccessKey}
-            <CopyToClipboard text={secretAccessKey} timeout={500}>
-                {(status) => (<AnchorButtonComponent status={status} qa="copy-button"/>)}
+            { secretAccessKey }
+            <CopyToClipboard text={ secretAccessKey } timeout={ 500 }>
+                { (status) => (<AnchorButtonComponent status={ status } qa="copy-button"/>) }
             </CopyToClipboard>
         </div>
-        <span className={cs.key_text}>{i18nK('key-description')}</span>
+        <span className={ cs.key_text }>{ i18nK('key-description') }</span>
     </Modal>)
 }

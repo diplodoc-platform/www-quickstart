@@ -4,6 +4,7 @@ import {configure as pcConfigure, Lang as PCLang} from '@gravity-ui/page-constru
 
 import * as en from './en';
 import * as ru from './ru';
+import * as env from '~/configs/env';
 
 export enum Locale {
     En = 'en',
@@ -37,6 +38,7 @@ Object.keys(ru).forEach((key) =>
 export const configureLang = (locale: string = Locale.En) => {
     uikitConfigure({lang: locale as UIKitLang});
     pcConfigure({lang: locale as PCLang});
+    i18n.setLang(env.lang || 'ru');
 };
 
 export default (keyset: string) => i18n.keyset(keyset);

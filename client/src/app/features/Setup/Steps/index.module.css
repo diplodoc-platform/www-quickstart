@@ -1,0 +1,149 @@
+.root {
+    /*48px from .pc-block-base.pc-block-base padding*/
+    height: calc(100vh - var(--header-height) - 48px);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding-top: 100px;
+}
+
+.content {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+}
+
+.title {
+    align-self: flex-start;
+    margin-left: 114px;
+}
+
+.steps {
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    width: 100%;
+    list-style: none;
+    padding: 20px 16px 20px 0;
+    width: 100%;
+    margin: 5px;
+
+    counter-increment: section;
+}
+
+.step:before {
+    color: inherit;
+    border-color: inherit;
+
+    content: counter(section);
+    font-size: 26px;
+    line-height: 26px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 2px;
+    border-radius: 50%;
+    margin: 0 20px 0 10px;
+    padding: 5px;
+}
+
+.step__active {}
+
+.step__error {}
+
+.step__finished {
+    border-color: var(--g-color-base-positive-heavy);
+    color: var(--g-color-base-positive-heavy);
+}
+
+.step_body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.step_text {
+    font-size: 26px;
+    line-height: 26px;
+}
+
+.step_title {
+    font-size: 26px;
+    line-height: 26px;
+    position: absolute;
+    padding: 0 0 0 70px;
+    transform: translateY(8px);
+    transition: all .3s;
+}
+
+.step_title__small {
+    font-size: 16px;
+    transform: translateY(-24px);
+    color: var(--g-color-text-hint);
+}
+
+.auth_button {
+    margin: 0 10px !important;
+}
+
+.repo_link,
+.auth_link {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    line-height: 24px;
+}
+
+@media only screen and (max-width: 460px) {
+    .auth_init_link {
+        margin-top: 15px;
+    }
+}
+
+
+.project {
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.project_link {
+    font-size: 18px;
+}
+
+.auth_link_avatar {
+    border-radius: 50%;
+    margin: 0 10px 0 0;
+}
+
+.repo_text {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.repo_button {
+    margin: 0 10px !important;
+}
+
+div.progress_bar {
+    width: 250px;
+
+    margin: 20px 0 0 0;
+}
+
+.modal {
+    width: 500px;
+    padding: 20px;
+}
+
+.key_text {
+    display: block;
+    margin-top: 15px;
+}

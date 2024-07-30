@@ -73,6 +73,7 @@ const config = ({ isServer, isDev = false }: Env) => {
                     : require.resolve('react-dom/server.browser'),
                 '~/assets': resolve(__dirname, './src/assets'),
                 '~/utils': resolve(__dirname, './src/utils'),
+                '~/i18n': resolve(__dirname, './src/i18n'),
                 '~/models': resolve(__dirname, './src/models'),
                 '~/resolvers': resolve(__dirname, './src/resolvers'),
                 '~/configs': resolve(__dirname, './src/configs'),

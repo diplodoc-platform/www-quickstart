@@ -3,10 +3,10 @@ import { Button, Icon, Link } from '@gravity-ui/uikit';
 
 import * as user from '~/configs/user';
 import { auth, base } from '~/configs/urls';
-
 import GithubIcon from '~/assets/github.svg';
+import {i18n} from '~/i18n';
+
 import * as cs from './index.module.css';
-import i18n from '../../../i18n/configureLang';
 
 const i18nK = i18n('main');
 

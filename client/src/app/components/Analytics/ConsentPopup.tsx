@@ -3,7 +3,7 @@ import React, {MutableRefObject} from 'react';
 import {Portal} from '@gravity-ui/uikit';
 import {Button, ButtonProps, Grid, Row, YFMWrapper} from '@gravity-ui/page-constructor';
 
-import * as cs from './index.module.css';
+import * as cs from './popup.module.css';
 
 export type ConsentButtonsPopupProps = Record<'decline' | 'accept', ButtonProps>;
 

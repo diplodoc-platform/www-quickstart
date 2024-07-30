@@ -28,13 +28,3 @@ export interface ConsentPopupData {
     text: string;
     buttons: ConsentButtonsPopupProps;
 }
-
-export enum AnalyticsConsentDecision {
-    granted = 'granted',
-    denied = 'denied',
-}
-
-export interface AnalyticsData {
-    id: string;
-    popup: ConsentPopupData;
-}

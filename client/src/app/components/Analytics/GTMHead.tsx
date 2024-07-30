@@ -1,26 +1,24 @@
-import React, {useEffect} from 'react';
-import {AnalyticsConsentDecision, AnalyticsData} from "../../../types";
-
-type GTMHeadPropsType = {
-    id: AnalyticsData['id'];
-    nonce?: string;
-};
+import React, { useEffect } from 'react';
+import { gtmId, nonce } from '~/configs/common';
 
 const LOCAL_STORAGE_CONSENT_KEY = 'hasAnalyticsConsent';
+
+enum AnalyticsConsentDecision {
+    granted = 'granted',
+    denied = 'denied',
+}
 
 /**
  * GTM head insert
  *
- * @param id - tag id
- *
  * @returns - jsx
  */
-export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
+export const GTMHead = gtmId ? () => {
     useEffect(() => {
         const gtmScript = document.createElement('script')
 
-        if(nonce){
-            gtmScript.setAttribute("nonce", nonce)
+        if (nonce) {
+            gtmScript.setAttribute('nonce', nonce)
         }
 
         gtmScript.innerHTML = `
@@ -31,10 +29,10 @@ export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
                 // Default analytics_storage to 'denied'.
                 window.gtag = window.gtag || gtag;
 
-                const hasAnalyticsConsent = window?.localStorage.getItem('${LOCAL_STORAGE_CONSENT_KEY}');
+                const hasAnalyticsConsent = window?.localStorage.getItem('${ LOCAL_STORAGE_CONSENT_KEY }');
 
                 window.gtag('consent', 'default', {
-                    'analytics_storage': hasAnalyticsConsent === 'true' ? '${AnalyticsConsentDecision.granted}' : '${AnalyticsConsentDecision.denied}',
+                    'analytics_storage': hasAnalyticsConsent === 'true' ? '${ AnalyticsConsentDecision.granted }' : '${ AnalyticsConsentDecision.denied }',
                     'wait_for_update': hasAnalyticsConsent === 'true' ? 0 : Infinity,
                 });
 
@@ -49,7 +47,7 @@ export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
                 n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
                 }
 
-                loadGtm(window, document, 'script', 'dataLayer', '${id}')
+                loadGtm(window, document, 'script', 'dataLayer', '${ gtmId }')
             `
 
         document.head.appendChild(gtmScript)
@@ -58,4 +56,6 @@ export const GTMHead = ({id, nonce}: GTMHeadPropsType) => {
             document.head.removeChild(gtmScript)
         }
     }, [])
-};
+
+    return null;
+} : () => null;

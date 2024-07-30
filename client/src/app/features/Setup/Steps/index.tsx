@@ -11,8 +11,8 @@ import { CreateLink } from './CreateLink';
 
 import * as user from '~/configs/user';
 
-import { resolvers } from '../../resolvers';
-import i18n from "../../../i18n/configureLang";
+import { resolvers } from '../../../resolvers';
+import { i18n } from '~/i18n';
 
 import * as cs from './index.module.css';
 
@@ -43,7 +43,7 @@ const Step: FC<PropsWithChildren<{
     );
 }
 
-export const SetupSteps = ({ repo, link }) => {
+export const Steps = ({ repo, link }) => {
     const userId = user?.id;
     const repoId = repo?.id;
     const linkId = link?.id;
@@ -78,10 +78,10 @@ export const SetupSteps = ({ repo, link }) => {
     return (
         <div className={ cs.root }>
             <div className={ cs.content }>
-                <h1 className={ cs.title }>{ i18nK('quickstart')}</h1>
+                <h1 className={ cs.title }>{ i18nK('quickstart') }</h1>
                 <ul className={ cs.steps }>
                     <Step title={ i18nK('login') } state={ _auth } step={ Authorize }/>
-                    <Step title={  i18nK('repository') } state={ _repo } step={ CreateRepo }/>
+                    <Step title={ i18nK('repository') } state={ _repo } step={ CreateRepo }/>
                     <Step title={ i18nK('project') } state={ _link } step={ CreateLink }/>
                 </ul>
             </div>

@@ -6,13 +6,13 @@ import { Button, Link } from '@gravity-ui/uikit';
 import { Repo } from '~/models/repo';
 import * as user from '~/configs/user';
 import { api, base } from '~/configs/urls';
+import { i18n } from '~/i18n';
 
 import * as cs from './index.module.css';
-import i18n from "../../../i18n/configureLang";
 
 const i18nK = i18n('main');
 
-const EmptyCreateRepo = memo(({repo}: {repo: Repo}) => {
+const EmptyCreateRepo = memo(({ repo }: { repo: Repo }) => {
     const [ loading, setLoading ] = useState(false);
 
     const onClick = useCallback(async () => {
@@ -45,13 +45,13 @@ const EmptyCreateRepo = memo(({repo}: {repo: Repo}) => {
     return (
         <div className={ cs.step_body }>
             <div className={ cs.repo_text }>
-                { i18nK(`project-created`)}<br/>
+                { i18nK(`project-created`) }<br/>
                 { user.login }/diplodoc-example
             </div>
             <Button className={ cs.repo_button } size={ 'l' } view={ 'action' }
                     loading={ loading }
                     onClick={ onClick }>
-                { i18nK(`create`)}
+                { i18nK(`create`) }
             </Button>
         </div>
     );
@@ -66,7 +66,7 @@ export const CreateRepo = memo(() => {
 
     if (!repo.id) {
         return (
-            <EmptyCreateRepo repo={repo} />
+            <EmptyCreateRepo repo={ repo }/>
         );
     }
 

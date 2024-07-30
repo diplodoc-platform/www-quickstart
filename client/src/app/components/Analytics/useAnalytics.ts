@@ -1,6 +1,6 @@
-import {useEffect, useState, useCallback, useRef} from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
-import {gtmEvent} from '../../utils/gtm';
+import { gtmEvent } from './gtm';
 import { useLocation } from 'react-router-dom';
 
 const LOCAL_STORAGE_CONSENT_KEY = 'hasAnalyticsConsent';
@@ -24,8 +24,8 @@ const getConsentValue = (hasConsent: boolean) =>
 
 export const useAnalytics = (router: any, id?: string) => {
     const analyticsRef = useRef<HTMLDivElement | null>(null);
-    const [consentValue, setConsentValue] = useState<boolean | undefined>();
-    const [hasConsent, setHasConsent] = useState<boolean>(false);
+    const [ consentValue, setConsentValue ] = useState<boolean | undefined>();
+    const [ hasConsent, setHasConsent ] = useState<boolean>(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -52,19 +52,19 @@ export const useAnalytics = (router: any, id?: string) => {
                     analytics_storage: getConsentValue(result),
                 });
 
-                window.gtag('config', id, {page_path: location.pathname});
+                window.gtag('config', id, { page_path: location.pathname });
             }
 
             setConsentValue(result);
             setHasConsent(true);
 
-            gtmEvent({action: 'updateConsent'});
+            gtmEvent({ action: 'updateConsent' });
 
             if (result) {
-                gtmEvent({action: 'cookie_consent_statistics'});
+                gtmEvent({ action: 'cookie_consent_statistics' });
             }
         },
-        [id, location],
+        [ id, location ],
     );
 
     useEffect(() => {
@@ -72,9 +72,9 @@ export const useAnalytics = (router: any, id?: string) => {
             return;
         }
 
-        window?.gtag?.('config', id, {page_path: location.pathname});
+        window?.gtag?.('config', id, { page_path: location.pathname });
 
-    }, [id]);
+    }, [ id ]);
 
     return {
         consentValue,

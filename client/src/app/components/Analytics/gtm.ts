@@ -11,6 +11,7 @@ const sendEvent = ({action}: GTMEventParams) => {
 
 declare global {
     interface Window {
+        gtag: (target: string, event: string, options: object) => void;
         dataLayer: Record<string, never>[];
     }
 }

@@ -5,7 +5,7 @@ import { App } from './app';
 
 import './index.css';
 
-export function render(test) {
+export function render() {
     try {
         hydrateRoot(document, (
             <BrowserRouter>

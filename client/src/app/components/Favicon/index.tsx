@@ -22,7 +22,7 @@ const renderIconLink = (size: number, folder: string, rel = 'icon') => {
     );
 };
 
-const Favicon: React.FC<FaviconProps> = ({assetsPath}) => {
+export const Favicon: React.FC<FaviconProps> = ({assetsPath}) => {
     const folder = `${assetsPath}/favicon`;
 
     return (
@@ -34,5 +34,3 @@ const Favicon: React.FC<FaviconProps> = ({assetsPath}) => {
         </Fragment>
     );
 };
-
-export default Favicon;
