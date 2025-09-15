@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 import { Resolver, Wait } from '@modelsjs/react';
-import { Setup } from './components/Setup';
+import { Setup } from './features/Setup';
 import { Head } from './components/Head';
 import { ErrorBoundary, Fallback } from './components/ErrorBoundary';
 import { Layout } from './components/Layout';
