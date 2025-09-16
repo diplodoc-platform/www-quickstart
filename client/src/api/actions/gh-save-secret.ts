@@ -11,15 +11,26 @@ type Props = {
 
 export async function GHSaveSecret({ owner, repo, secrets }: Props, ctx: ModelContext) {
     const octokit = Octokit();
-    const { key, id: keyId } = await ctx.request(GhRepoPublicKey, { owner, repo });
 
-    await Promise.all(secrets.map(async ({ name, value }) => octokit.request('PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}', {
-        owner,
-        repo,
-        key_id: keyId,
-        secret_name: name,
-        encrypted_value: await encrypt(key, value),
-    })));
+    try {
+        const { key, id: keyId } = await ctx.request(GhRepoPublicKey, { owner, repo });
+
+        await Promise.all(secrets.map(async ({ name, value }) => octokit.request('PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}', {
+            owner,
+            repo,
+            key_id: keyId,
+            secret_name: name,
+            encrypted_value: await encrypt(key, value),
+        })));
+    } catch (error) {
+        ctx.logger.error(error, `GitHub API error saving secrets to ${owner || 'undefined'}/${repo || 'undefined'}`, {
+            owner,
+            repo,
+            errorStatus: (error as any)?.status,
+            errorMessage: (error as Error)?.message
+        });
+        throw error;
+    }
 }
 
 GHSaveSecret.displayName = 'gh-save-secret';

@@ -10,20 +10,31 @@ type Props = {
 
 export async function ResolveDeploy({ owner, repo }: Props, ctx: ModelContext) {
     const octokit = Octokit();
-    const deploy = await ctx.request(Deploy, { owner, repo });
 
-    if (!deploy) {
-        await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+    try {
+        const deploy = await ctx.request(Deploy, { owner, repo });
+
+        if (!deploy) {
+            await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+                owner,
+                repo,
+                workflow_id: 'release.yml',
+                ref: 'main',
+            });
+
+            return await retrier(async () => await ctx.request(Deploy, { owner, repo, nocache: Date.now() }), {attempts: 5, delay: 1000});
+        }
+
+        return deploy;
+    } catch (error) {
+        ctx.logger.error(error, `GitHub API error triggering deploy for ${owner || 'undefined'}/${repo || 'undefined'}`, {
             owner,
             repo,
-            workflow_id: 'release.yml',
-            ref: 'main',
+            errorStatus: (error as any)?.status,
+            errorMessage: (error as Error)?.message
         });
-
-        return await retrier(async () => await ctx.request(Deploy, { owner, repo, nocache: Date.now() }), {attempts: 5, delay: 1000});
+        throw error;
     }
-
-    return deploy;
 }
 
 ResolveDeploy.displayName = 'resolve-deploy';

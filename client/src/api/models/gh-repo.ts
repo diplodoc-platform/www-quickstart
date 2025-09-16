@@ -1,4 +1,4 @@
-import type { GHResponse, GHError } from '../../types';
+import type { GHResponse, GHError, ModelContext } from '../../types';
 import { Octokit } from './services/octokit';
 import { NotFoundError } from '../errors';
 import { login } from '~/configs/user';
@@ -8,7 +8,7 @@ type Props = {
     repo: string;
 };
 
-export async function GhRepo({ owner, repo }: Props): Promise<ReturnType<typeof RepoResult>> {
+export async function GhRepo({ owner, repo }: Props, ctx: ModelContext): Promise<ReturnType<typeof RepoResult>> {
     const octokit = Octokit();
 
     try {
@@ -19,9 +19,19 @@ export async function GhRepo({ owner, repo }: Props): Promise<ReturnType<typeof 
 
         return RepoResult(data);
     } catch (error) {
-        switch ((error as GHError)?.status) {
+        const ghError = error as GHError;
+
+        ctx.logger.error(error, `GitHub API error fetching repository ${owner || 'undefined'}/${repo || 'undefined'}`, {
+            owner,
+            repo,
+            login,
+            errorStatus: (error as GHError)?.status,
+            errorMessage: (error as Error)?.message
+        });
+
+        switch (ghError?.status) {
             case 404:
-                return {};
+                return {} as ReturnType<typeof RepoResult>;
             default:
                 throw error;
         }
