@@ -12,21 +12,22 @@ const __dirname = path.dirname(__filename);
 const {
     PORT = 3000,
     BASE = '',
+    STATIC_BASE = '/static',
     EXPRESS_STATIC
 } = process.env;
 
 const app = express();
 
 if (EXPRESS_STATIC) {
-    app.use(BASE + '/static', express.static(path.join(__dirname, '../client/build')))
+    app.use(STATIC_BASE, express.static(path.join(__dirname, '../client/build')))
 }
 
 // app.use('/:lang*?' + BASE, (req, res, next) => {
 //     req.lang = req.params.lang;
 //     next();
-// }, quickstart({navigation, base: BASE}));
+// }, quickstart({navigation, base: BASE, staticBase: STATIC_BASE}));
 
-app.use(quickstart({navigation, base: BASE}));
+app.use(quickstart({navigation, base: BASE, staticBase: STATIC_BASE}));
 
 app.listen(PORT, () => {
     console.log('LISTEN ON ', PORT);
