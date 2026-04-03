@@ -12,9 +12,10 @@ const __dirname = path.dirname(__filename);
 const {
     PORT = 3000,
     BASE = '',
-    STATIC_BASE = '/static',
     EXPRESS_STATIC
 } = process.env;
+
+const STATIC_BASE = process.env.STATIC_BASE ?? (BASE + '/static');
 
 const app = express();
 
